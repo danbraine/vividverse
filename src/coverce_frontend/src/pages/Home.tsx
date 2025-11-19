@@ -8,13 +8,12 @@ const Home = () => {
   return (
     <div className="home">
       <div className="hero">
-        <h1 className="hero-title">🎬 Coverce.ai</h1>
+        <h1 className="hero-tagline">Harnessing Human Imagination</h1>
         <p className="hero-subtitle">
-          Submit scripts. Get validated. Watch AI bring them to life.
+          The world's first decentralised studio where creators and critics get paid to power a global imagination flywheel.
         </p>
         <p className="hero-description">
-          The decentralized platform where writers submit scripts, validators judge quality,
-          and AI automatically generates movies from winning submissions.
+          {/* Vividverse, a canvas of human imagination. A studio owned by the world, authored by the world. Stories told by the world. */}
         </p>
         
         <div className="hero-actions">

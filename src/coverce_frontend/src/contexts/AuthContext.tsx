@@ -42,10 +42,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       const authClient = await AuthClient.create();
       
+      const isProduction = import.meta.env.MODE === 'production' || import.meta.env.VITE_DFX_NETWORK === 'ic';
+      
+      // For local development, use production Internet Identity (simpler for PoC)
+      // For production, you can use:
+      // - Internet Identity: https://identity.ic0.app
+      // - NFID (with Google/Apple): https://nfid.one
+      const identityProvider = isProduction
+        ? 'https://identity.ic0.app' // or 'https://nfid.one' for Google/Apple login
+        : 'https://identity.ic0.app'; // Use production II for local dev (works fine for PoC)
+      
       await authClient.login({
-        identityProvider: process.env.DFX_NETWORK === 'ic' 
-          ? 'https://identity.ic0.app'
-          : `http://localhost:4943?canisterId=${process.env.CANISTER_ID_INTERNET_IDENTITY}`,
+        identityProvider,
         onSuccess: async () => {
           const identity = authClient.getIdentity();
           setPrincipal(identity.getPrincipal());

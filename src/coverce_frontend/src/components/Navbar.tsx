@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import vividverseLogo from '../vividverse_logo.svg';
 import './Navbar.css';
 
 const Navbar = () => {
@@ -15,7 +16,8 @@ const Navbar = () => {
     <nav className="navbar">
       <div className="navbar-container">
         <Link to="/" className="navbar-brand">
-          🎬 Coverce.ai
+          <img src={vividverseLogo} alt="VividVerse" className="navbar-logo" />
+          <span className="navbar-brand-text">VividVerse</span>
         </Link>
         
         <div className="navbar-links">

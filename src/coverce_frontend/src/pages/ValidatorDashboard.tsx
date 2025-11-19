@@ -6,7 +6,7 @@ import {
   isValidator, 
   submitValidation,
   getValidations 
-} from '../services/coverceService';
+} from '../services/vividverseService';
 import './ValidatorDashboard.css';
 
 interface Script {

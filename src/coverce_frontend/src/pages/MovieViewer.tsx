@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getMovie, getScript } from '../services/coverceService';
+import { getMovie, getScript } from '../services/vividverseService';
 import './MovieViewer.css';
 
 interface Movie {
@@ -100,7 +100,7 @@ const MovieViewer = () => {
               {movie.thumbnailHash && (
                 <div className="thumbnail">
                   <img 
-                    src={`https://${process.env.CANISTER_ID_COVERCE_BACKEND || 'rrkah-fqaaa-aaaaa-aaaaq-cai'}.ic0.app/api/movie/${movie.movieHash}/thumbnail`}
+                    src={`https://${import.meta.env.VITE_CANISTER_ID_VIVIDVERSE_BACKEND || import.meta.env.VITE_CANISTER_ID_COVERCE_BACKEND || 'uxrrr-q7777-77774-qaaaq-cai'}.ic0.app/api/movie/${movie.movieHash}/thumbnail`}
                     alt="Movie thumbnail"
                   />
                 </div>
@@ -110,10 +110,10 @@ const MovieViewer = () => {
                 <video 
                   controls 
                   className="movie-video"
-                  poster={movie.thumbnailHash ? `https://${process.env.CANISTER_ID_COVERCE_BACKEND || 'rrkah-fqaaa-aaaaa-aaaaq-cai'}.ic0.app/api/movie/${movie.movieHash}/thumbnail` : undefined}
+                  poster={movie.thumbnailHash ? `https://${import.meta.env.VITE_CANISTER_ID_VIVIDVERSE_BACKEND || import.meta.env.VITE_CANISTER_ID_COVERCE_BACKEND || 'uxrrr-q7777-77774-qaaaq-cai'}.ic0.app/api/movie/${movie.movieHash}/thumbnail` : undefined}
                 >
                   <source 
-                    src={`https://${process.env.CANISTER_ID_COVERCE_BACKEND || 'rrkah-fqaaa-aaaaa-aaaaq-cai'}.ic0.app/api/movie/${movie.movieHash}`}
+                    src={`https://${import.meta.env.VITE_CANISTER_ID_VIVIDVERSE_BACKEND || import.meta.env.VITE_CANISTER_ID_COVERCE_BACKEND || 'uxrrr-q7777-77774-qaaaq-cai'}.ic0.app/api/movie/${movie.movieHash}`}
                     type="video/mp4"
                   />
                   Your browser does not support the video tag.

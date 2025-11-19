@@ -15,20 +15,49 @@ import Principal "mo:base/Principal";
 import Text "mo:base/Text";
 import Time "mo:base/Time";
 
-persistent actor CoverceBackend {
-  // Storage
-  private transient var scriptCounter: Nat = 0;
-  private transient var sceneCounter: Nat = 0;
+actor CoverceBackend {
+  // Storage - Using stable variables for persistence across upgrades
+  private stable var scriptCounter: Nat = 0;
+  private stable var sceneCounter: Nat = 0;
   
-  private transient let scripts = HashMap.HashMap<Types.ScriptId, Types.ScriptSubmission>(0, Nat.equal, Hash.hash);
-  private transient let scriptContent = HashMap.HashMap<Types.ScriptId, Blob>(0, Nat.equal, Hash.hash);
-  private transient let validations = HashMap.HashMap<Types.ScriptId, [Types.ValidationScore]>(0, Nat.equal, Hash.hash);
-  private transient let aggregatedScores = HashMap.HashMap<Types.ScriptId, Types.AggregatedScore>(0, Nat.equal, Hash.hash);
-  private transient let scenes = HashMap.HashMap<Types.ScriptId, [Types.Scene]>(0, Nat.equal, Hash.hash);
-  private transient let movies = HashMap.HashMap<Types.ScriptId, Types.Movie>(0, Nat.equal, Hash.hash);
+  // Stable arrays that will be converted to HashMaps on init
+  private stable var scriptsEntries: [(Types.ScriptId, Types.ScriptSubmission)] = [];
+  private stable var scriptContentEntries: [(Types.ScriptId, Blob)] = [];
+  private stable var validationsEntries: [(Types.ScriptId, [Types.ValidationScore])] = [];
+  private stable var aggregatedScoresEntries: [(Types.ScriptId, Types.AggregatedScore)] = [];
+  private stable var scenesEntries: [(Types.ScriptId, [Types.Scene])] = [];
+  private stable var moviesEntries: [(Types.ScriptId, Types.Movie)] = [];
+  private stable var validatorsEntries: [(Types.ValidatorId, Bool)] = [];
   
-  // Validator registry (for MVP, can be expanded later)
-  private transient let validators = HashMap.HashMap<Types.ValidatorId, Bool>(0, Principal.equal, Principal.hash);
+  // Runtime HashMaps (rebuilt from stable arrays on init)
+  private var scripts = HashMap.HashMap<Types.ScriptId, Types.ScriptSubmission>(0, Nat.equal, Hash.hash);
+  private var scriptContent = HashMap.HashMap<Types.ScriptId, Blob>(0, Nat.equal, Hash.hash);
+  private var validations = HashMap.HashMap<Types.ScriptId, [Types.ValidationScore]>(0, Nat.equal, Hash.hash);
+  private var aggregatedScores = HashMap.HashMap<Types.ScriptId, Types.AggregatedScore>(0, Nat.equal, Hash.hash);
+  private var scenes = HashMap.HashMap<Types.ScriptId, [Types.Scene]>(0, Nat.equal, Hash.hash);
+  private var movies = HashMap.HashMap<Types.ScriptId, Types.Movie>(0, Nat.equal, Hash.hash);
+  private var validators = HashMap.HashMap<Types.ValidatorId, Bool>(0, Principal.equal, Principal.hash);
+  
+  // Initialize HashMaps from stable arrays
+  system func preupgrade() {
+    scriptsEntries := Iter.toArray(scripts.entries());
+    scriptContentEntries := Iter.toArray(scriptContent.entries());
+    validationsEntries := Iter.toArray(validations.entries());
+    aggregatedScoresEntries := Iter.toArray(aggregatedScores.entries());
+    scenesEntries := Iter.toArray(scenes.entries());
+    moviesEntries := Iter.toArray(movies.entries());
+    validatorsEntries := Iter.toArray(validators.entries());
+  };
+  
+  system func postupgrade() {
+    scripts := HashMap.fromIter<Types.ScriptId, Types.ScriptSubmission>(scriptsEntries.vals(), 0, Nat.equal, Hash.hash);
+    scriptContent := HashMap.fromIter<Types.ScriptId, Blob>(scriptContentEntries.vals(), 0, Nat.equal, Hash.hash);
+    validations := HashMap.fromIter<Types.ScriptId, [Types.ValidationScore]>(validationsEntries.vals(), 0, Nat.equal, Hash.hash);
+    aggregatedScores := HashMap.fromIter<Types.ScriptId, Types.AggregatedScore>(aggregatedScoresEntries.vals(), 0, Nat.equal, Hash.hash);
+    scenes := HashMap.fromIter<Types.ScriptId, [Types.Scene]>(scenesEntries.vals(), 0, Nat.equal, Hash.hash);
+    movies := HashMap.fromIter<Types.ScriptId, Types.Movie>(moviesEntries.vals(), 0, Nat.equal, Hash.hash);
+    validators := HashMap.fromIter<Types.ValidatorId, Bool>(validatorsEntries.vals(), 0, Principal.equal, Principal.hash);
+  };
   
   // Helper function to convert Nat to Int (for small values like scores 1-10)
   private func natToInt(n: Nat): Int {

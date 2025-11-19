@@ -1,7 +1,7 @@
 {
-  "name": "coverce-ai",
+  "name": "vividverse",
   "version": "0.1.0",
-  "description": "Coverce.ai MVP - Script submission, validation, and AI film generation on ICP",
+  "description": "VividVerse - AI-Powered Film Generation Platform on ICP",
   "scripts": {
     "dev": "dfx start",
     "deploy:local": "dfx deploy",

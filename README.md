@@ -1,15 +1,15 @@
-# Coverce.ai MVP
+# Vividverse MVP
 
-The minimum viable product for Coverce.ai - a decentralized platform where writers submit scripts, validators judge them, and AI generates movies from winning submissions.
+The minimum viable product for Vividverse - a platform where writers submit scripts, validators judge them, and AI generates movies from winning submissions.
 
 ## Architecture
 
-**Frontend (ICP-hosted React app)**
+**Frontend (React app)**
 - Miner Submission Portal - Writers upload scripts
 - Validator Dashboard - Judges score scripts
 - Movie Viewer - Users watch generated films
 
-**Backend (ICP Motoko canisters)**
+**Backend (Node.js/Express API)**
 - Script storage and management
 - Validation scoring system
 - AI orchestration for film generation
@@ -23,73 +23,84 @@ The minimum viable product for Coverce.ai - a decentralized platform where write
 ## Quick Start
 
 ### Prerequisites
-- [DFX SDK](https://internetcomputer.org/docs/current/developer-docs/setup/install/) installed
 - Node.js 18+ installed
-
-**📦 Need to install dependencies?**
-- **Linux users:** See [INSTALL_LINUX.md](./INSTALL_LINUX.md) or run `./setup-linux.sh`
-- **Windows users:** See [INSTALL.md](./INSTALL.md) or [INSTALL_DFX_SIMPLE.md](./INSTALL_DFX_SIMPLE.md)
+- MongoDB installed (or use MongoDB Atlas)
+- FFmpeg installed (for video processing - optional for AI orchestrator)
 
 ### Local Development
 
 1. Install project dependencies:
 ```bash
 npm install
+cd backend && npm install && cd ..
 cd src/coverce_frontend && npm install && cd ../..
 cd src/ai_orchestrator && npm install && cd ../..
 ```
 
-2. Start local ICP network:
+2. Set up environment variables:
 ```bash
-dfx start
+# Backend
+cd backend
+cp ../.env.example .env
+# Edit .env with your database and JWT secret
+
+# Frontend
+cd ../src/coverce_frontend
+# Create .env with: VITE_API_URL=http://localhost:5000/api
 ```
 
-3. Deploy canisters (in a new terminal):
+3. Start database:
 ```bash
-dfx generate
-dfx deploy
+# MongoDB: mongod (or use MongoDB Atlas)
 ```
 
-4. Start frontend dev server (in a new terminal):
+4. Start backend server (in a new terminal):
+```bash
+cd backend && npm run dev
+```
+
+5. Start frontend dev server (in a new terminal):
 ```bash
 cd src/coverce_frontend && npm run dev
 ```
 
-5. Open `http://localhost:3000` in your browser
+6. Open `http://localhost:3000` in your browser
 
-**📖 For detailed preview/testing instructions, see [PREVIEW_GUIDE.md](./PREVIEW_GUIDE.md)**
-
-### Deploy to ICP Mainnet
-
-```bash
-dfx deploy --network ic
-```
+**📖 For detailed setup instructions, see [SETUP_GUIDE.md](./SETUP_GUIDE.md)**
 
 ## Project Structure
 
 ```
-coverce.ai/
+vividverse/
+├── backend/                    # Node.js/Express backend
+│   ├── src/
+│   │   ├── routes/             # API routes
+│   │   ├── controllers/        # Request handlers
+│   │   ├── models/             # Database models
+│   │   ├── middleware/         # Auth & validation
+│   │   └── services/           # Business logic
+│   ├── server.js               # Express server entry
+│   └── package.json
 ├── src/
-│   ├── coverce_backend/        # Motoko backend canister
-│   │   ├── main.mo             # Main canister logic
-│   │   └── Types.mo            # Type definitions
-│   └── coverce_frontend/       # React frontend
-│       ├── src/
-│       │   ├── components/     # React components
-│       │   ├── pages/          # Page components
-│       │   ├── services/       # ICP agent services
-│       │   └── utils/          # Utilities
+│   ├── coverce_frontend/       # React frontend
+│   │   ├── src/
+│   │   │   ├── components/     # React components
+│   │   │   ├── pages/          # Page components
+│   │   │   ├── services/       # API service layer
+│   │   │   └── utils/          # Utilities
+│   │   └── package.json
+│   └── ai_orchestrator/        # AI film generator
+│       ├── index.js
 │       └── package.json
-├── dfx.json                    # ICP project config
 └── README.md
 ```
 
 ## Features
 
 ### ✅ MVP Features
-- [x] Internet Identity authentication
+- [x] JWT-based authentication
 - [x] Script upload (PDF, Fountain format)
-- [x] Script storage on ICP
+- [x] Script storage in database and cloud storage
 - [x] Validation dashboard
 - [x] Scoring rubric system
 - [x] AI film generation orchestrator

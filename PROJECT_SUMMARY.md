@@ -1,45 +1,52 @@
-# Coverce.ai MVP - Project Summary
+# Vividverse MVP - Project Summary
 
 ## ✅ What's Been Built
 
-A complete minimum viable product (MVP) for Coverce.ai - a decentralized platform where writers submit scripts, validators judge them, and AI automatically generates movies from winning submissions.
+A complete minimum viable product (MVP) for Vividverse - a platform where writers submit scripts, validators judge them, and AI automatically generates movies from winning submissions.
 
 ## 📁 Project Structure
 
 ```
-coverce.ai/
-├── src/
-│   ├── coverce_backend/          # Motoko backend canister
-│   │   ├── main.mo               # Main canister logic
-│   │   └── Types.mo              # Type definitions
-│   │
-│   ├── coverce_frontend/         # React frontend
-│   │   ├── src/
-│   │   │   ├── components/       # React components
-│   │   │   ├── contexts/         # Auth context
-│   │   │   ├── pages/            # Page components
-│   │   │   └── services/         # ICP service layer
-│   │   └── package.json
-│   │
-│   └── ai_orchestrator/          # AI film generator
-│       ├── index.js              # Main orchestrator
-│       └── package.json
+vividverse/
+├── backend/                      # Node.js/Express backend
+│   ├── src/
+│   │   ├── routes/               # API routes
+│   │   ├── controllers/          # Request handlers
+│   │   ├── models/               # Database models
+│   │   ├── middleware/           # Auth & validation
+│   │   ├── services/             # Business logic
+│   │   └── config/               # Database & app config
+│   ├── server.js                 # Express server entry
+│   └── package.json
 │
-├── dfx.json                      # ICP project config
+├── frontend/                     # React frontend
+│   ├── src/
+│   │   ├── components/           # React components
+│   │   ├── contexts/             # Auth context
+│   │   ├── pages/                # Page components
+│   │   ├── services/             # API service layer
+│   │   └── utils/                # Utilities
+│   ├── package.json
+│   └── vite.config.js
+│
+├── ai-orchestrator/              # AI film generator
+│   ├── index.js                  # Main orchestrator
+│   └── package.json
+│
 ├── package.json                  # Root dependencies
 ├── README.md                     # Main documentation
 ├── QUICKSTART.md                 # Quick start guide
 ├── DEPLOYMENT.md                 # Deployment guide
 ├── ARCHITECTURE.md               # System architecture
-└── env.example                   # Environment template
+└── .env.example                  # Environment template
 ```
 
 ## 🎯 Core Features Implemented
 
 ### 1. Miner Submission Portal ✅
-- Internet Identity authentication (passwordless)
+- JWT-based authentication
 - Script upload (PDF, Fountain, Text formats)
-- File storage on ICP canisters
+- File storage on cloud storage (AWS S3, Cloudinary, etc.)
 - Content hashing for integrity
 - Status tracking (Pending → Validating → Selected → Generating → Completed)
 
@@ -60,7 +67,7 @@ coverce.ai/
 - FFmpeg video stitching
 - Scene-by-scene generation
 - Final movie assembly
-- ICP storage upload
+- Cloud storage upload
 
 ### 4. Movie Viewer ✅
 - Movie playback interface
@@ -74,13 +81,15 @@ coverce.ai/
 - React 18 + TypeScript
 - Vite (build tool)
 - React Router (routing)
-- @dfinity/agent (ICP integration)
-- Internet Identity (authentication)
+- Axios (HTTP client)
+- JWT authentication
 
 ### Backend
-- Motoko (ICP canister language)
-- ICP Canisters (storage & compute)
-- HashMap (data structures)
+- Node.js + Express
+- MongoDB/PostgreSQL (database)
+- JWT (authentication)
+- Multer (file uploads)
+- Cloud storage integration (AWS S3, Cloudinary, etc.)
 
 ### AI Orchestrator
 - Node.js
@@ -90,10 +99,10 @@ coverce.ai/
 
 ## 📊 Data Flow
 
-1. **Submission**: User → Frontend → ICP Backend → Storage
-2. **Validation**: Validator → Frontend → ICP Backend → Score Aggregation
-3. **Generation**: Top Script → ICP Backend → AI Orchestrator → AI APIs → FFmpeg → ICP Storage
-4. **Viewing**: User → Frontend → ICP Backend → Movie Playback
+1. **Submission**: User → Frontend → Express API → Database → Cloud Storage
+2. **Validation**: Validator → Frontend → Express API → Database → Score Aggregation
+3. **Generation**: Top Script → Express API → AI Orchestrator → AI APIs → FFmpeg → Cloud Storage
+4. **Viewing**: User → Frontend → Express API → Database → Movie Playback
 
 ## 🚀 Getting Started
 
@@ -101,17 +110,26 @@ coverce.ai/
 ```bash
 # 1. Install dependencies
 npm install
-cd src/coverce_frontend && npm install && cd ../..
-cd src/ai_orchestrator && npm install && cd ../..
+cd backend && npm install && cd ..
+cd frontend && npm install && cd ..
+cd ai-orchestrator && npm install && cd ..
 
-# 2. Start ICP network
-dfx start
+# 2. Set up environment variables
+cp .env.example .env
+# Edit .env with your database and API keys
 
-# 3. Deploy canisters (new terminal)
-dfx deploy
+# 3. Start database (MongoDB/PostgreSQL)
+# MongoDB: mongod (or use MongoDB Atlas)
+# PostgreSQL: pg_ctl start (or use cloud service)
 
-# 4. Start frontend (new terminal)
-cd src/coverce_frontend && npm run dev
+# 4. Start backend (new terminal)
+cd backend && npm run dev
+
+# 5. Start frontend (new terminal)
+cd frontend && npm run dev
+
+# 6. Start AI orchestrator (optional, for production)
+cd ai-orchestrator && npm start
 ```
 
 See [QUICKSTART.md](./QUICKSTART.md) for detailed instructions.
@@ -142,10 +160,11 @@ All core MVP features are implemented and functional.
 
 ## 💰 Cost Estimates
 
-### ICP Costs (Monthly)
-- Canister storage: ~$5-20 per GB
-- Compute: Minimal for MVP
-- Frontend hosting: Included
+### Infrastructure Costs (Monthly)
+- Database hosting: ~$10-50 (MongoDB Atlas/PostgreSQL)
+- Cloud storage: ~$5-20 per GB (AWS S3, Cloudinary)
+- Backend hosting: ~$10-50 (Heroku, Railway, AWS, etc.)
+- Frontend hosting: ~$0-20 (Vercel, Netlify, etc.)
 
 ### AI API Costs (Per Movie)
 - Video generation: ~$10-15 (20 scenes × $0.50-0.75)
@@ -155,18 +174,20 @@ All core MVP features are implemented and functional.
 
 ## 🎓 Learning Resources
 
-- **ICP Docs**: https://internetcomputer.org/docs/
-- **Motoko Docs**: https://internetcomputer.org/docs/current/motoko/main/motoko
+- **Node.js Docs**: https://nodejs.org/docs/
+- **Express Docs**: https://expressjs.com/
 - **React Docs**: https://react.dev/
+- **MongoDB Docs**: https://www.mongodb.com/docs/
+- **PostgreSQL Docs**: https://www.postgresql.org/docs/
 - **FFmpeg Docs**: https://ffmpeg.org/documentation.html
 
 ## 🤝 Contributing
 
 This is an MVP. To extend:
 
-1. **Backend**: Edit `src/coverce_backend/main.mo`
-2. **Frontend**: Edit `src/coverce_frontend/src/`
-3. **AI Orchestrator**: Edit `src/ai_orchestrator/index.js`
+1. **Backend**: Edit `backend/src/`
+2. **Frontend**: Edit `frontend/src/`
+3. **AI Orchestrator**: Edit `ai-orchestrator/index.js`
 
 ## 📄 License
 
@@ -182,10 +203,11 @@ Built following the MVP specification provided, focusing on simplicity and funct
 
 **Next Steps**: 
 1. Test locally
-2. Deploy to ICP mainnet
+2. Deploy to cloud hosting (Heroku, Railway, AWS, etc.)
 3. Configure AI API keys
-4. Gather user feedback
-5. Plan V2 features
+4. Set up database and cloud storage
+5. Gather user feedback
+6. Plan V2 features
 
 
 

@@ -97,10 +97,10 @@ const MovieViewer = () => {
         <div className="movie-player">
           {isCompleted ? (
             <>
-              {movie.thumbnailHash && (
+              {movie.thumbnailUrl && (
                 <div className="thumbnail">
                   <img 
-                    src={`https://${import.meta.env.VITE_CANISTER_ID_VIVIDVERSE_BACKEND || import.meta.env.VITE_CANISTER_ID_COVERCE_BACKEND || 'uxrrr-q7777-77774-qaaaq-cai'}.ic0.app/api/movie/${movie.movieHash}/thumbnail`}
+                    src={movie.thumbnailUrl}
                     alt="Movie thumbnail"
                   />
                 </div>
@@ -110,10 +110,10 @@ const MovieViewer = () => {
                 <video 
                   controls 
                   className="movie-video"
-                  poster={movie.thumbnailHash ? `https://${import.meta.env.VITE_CANISTER_ID_VIVIDVERSE_BACKEND || import.meta.env.VITE_CANISTER_ID_COVERCE_BACKEND || 'uxrrr-q7777-77774-qaaaq-cai'}.ic0.app/api/movie/${movie.movieHash}/thumbnail` : undefined}
+                  poster={movie.thumbnailUrl || undefined}
                 >
                   <source 
-                    src={`https://${import.meta.env.VITE_CANISTER_ID_VIVIDVERSE_BACKEND || import.meta.env.VITE_CANISTER_ID_COVERCE_BACKEND || 'uxrrr-q7777-77774-qaaaq-cai'}.ic0.app/api/movie/${movie.movieHash}`}
+                    src={movie.videoUrl || ''}
                     type="video/mp4"
                   />
                   Your browser does not support the video tag.

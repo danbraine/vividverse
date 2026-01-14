@@ -1,97 +1,42 @@
-import { Actor, HttpAgent } from '@dfinity/agent';
-import { AuthClient } from '@dfinity/auth-client';
-import { idlFactory } from '@declarations/coverce_backend';
-import { _SERVICE } from '@declarations/coverce_backend/coverce_backend.did';
+// Auto-switch between mock and real service
+// Set VITE_USE_MOCK_SERVICE=false to use real API
 
-// Get canister ID from environment or use local default
-// Note: Canister name is still coverce_backend in dfx.json for compatibility
-const canisterId = import.meta.env.VITE_CANISTER_ID_VIVIDVERSE_BACKEND || import.meta.env.VITE_CANISTER_ID_COVERCE_BACKEND || 'uxrrr-q7777-77774-qaaaq-cai';
+// Default to real API - for mock mode, import directly from vividverseService.mock
+import { scriptAPI, validationAPI, movieAPI } from './apiService';
 
-let actor: _SERVICE | null = null;
-
-export const getActor = async (): Promise<_SERVICE> => {
-  if (actor) return actor;
-
-  const authClient = await AuthClient.create();
-  const identity = authClient.getIdentity();
-  
-  const isProduction = import.meta.env.MODE === 'production' || import.meta.env.VITE_DFX_NETWORK === 'ic';
-  
-  const agent = new HttpAgent({
-    identity,
-    host: isProduction
-      ? 'https://ic0.app'
-      : 'http://localhost:8000',
-  });
-
-  // For local development, fetch root key
-  if (!isProduction) {
-    await agent.fetchRootKey();
-  }
-
-  actor = Actor.createActor(idlFactory, {
-    agent,
-    canisterId,
-  });
-
-  return actor;
-};
-
-// Script submission
+// Map to match the expected interface
 export const submitScript = async (
   title: string,
   format: 'PDF' | 'Fountain' | 'Text',
   content: Uint8Array,
   summary?: string
 ) => {
-  const actor = await getActor();
-  const formatEnum = format === 'PDF' ? { PDF: null } : format === 'Fountain' ? { Fountain: null } : { Text: null };
-  
-  const result = await actor.submitScript(
-    title,
-    formatEnum as any,
-    content as any,
-    summary ? [summary] : []
-  );
-  
-  if ('ok' in result) {
-    return result.ok;
-  } else {
-    throw new Error('Failed to submit script');
-  }
+  // Convert Uint8Array to File
+  const blob = new Blob([content]);
+  const file = new File([blob], `script.${format.toLowerCase()}`, { type: 'application/octet-stream' });
+  const result = await scriptAPI.submitScript(title, format, file, summary);
+  return result.script.id;
 };
 
-// Get scripts
 export const getScript = async (scriptId: number) => {
-  const actor = await getActor();
-  const result = await actor.getScript(scriptId);
-  
-  if ('ok' in result) {
-    return result.ok;
-  } else {
-    throw new Error('Script not found');
-  }
+  return await scriptAPI.getScript(scriptId.toString());
 };
 
 export const getPendingScripts = async () => {
-  const actor = await getActor();
-  return await actor.getPendingScripts();
+  return await scriptAPI.getPendingScripts();
 };
 
 export const getAllScripts = async () => {
-  const actor = await getActor();
-  return await actor.getAllScripts();
+  return await scriptAPI.getAllScripts();
 };
 
-// Validation
 export const registerValidator = async () => {
-  const actor = await getActor();
-  return await actor.registerValidator();
+  const result = await validationAPI.registerValidator();
+  return { ok: result.isValidator };
 };
 
 export const isValidator = async (userId: string) => {
-  const actor = await getActor();
-  return await actor.isValidator(userId as any);
+  return await validationAPI.isValidator();
 };
 
 export const submitValidation = async (
@@ -99,79 +44,39 @@ export const submitValidation = async (
   scores: Array<{ category: string; score: number }>,
   comments?: string
 ) => {
-  const actor = await getActor();
+  // Convert category format
+  const scoreObj: Record<string, number> = {};
+  scores.forEach(s => {
+    const key = s.category === 'Story' ? 'story' :
+                s.category === 'Characters' ? 'characters' :
+                s.category === 'Dialogue' ? 'dialogue' :
+                s.category === 'Originality' ? 'originality' :
+                s.category === 'Structure' ? 'structure' : 'visualPotential';
+    scoreObj[key] = s.score;
+  });
   
-  // Convert category strings to enum format
-  const categoryMap: Record<string, any> = {
-    'Story': { Story: null },
-    'Characters': { Characters: null },
-    'Dialogue': { Dialogue: null },
-    'Originality': { Originality: null },
-    'Structure': { Structure: null },
-    'VisualPotential': { VisualPotential: null },
-  };
-  
-  const scoreTuples = scores.map(s => [
-    categoryMap[s.category],
-    s.score
-  ] as [any, number]);
-  
-  const result = await actor.submitValidation(
-    scriptId,
-    scoreTuples as any,
-    comments ? [comments] : []
-  );
-  
-  if ('ok' in result) {
-    return result.ok;
-  } else {
-    throw new Error('Failed to submit validation');
-  }
+  const result = await validationAPI.submitValidation(scriptId.toString(), scoreObj, comments);
+  return { ok: true };
 };
 
 export const getValidations = async (scriptId: number) => {
-  const actor = await getActor();
-  return await actor.getValidations(scriptId);
+  return await validationAPI.getValidations(scriptId.toString());
 };
 
 export const getAggregatedScore = async (scriptId: number) => {
-  const actor = await getActor();
-  const result = await actor.getAggregatedScore(scriptId);
-  
-  if ('ok' in result) {
-    return result.ok;
-  } else {
-    throw new Error('Score not found');
-  }
+  return await movieAPI.getAggregatedScore(scriptId.toString());
 };
 
 export const getTopScript = async () => {
-  const actor = await getActor();
-  return await actor.getTopScript();
+  const result = await scriptAPI.getTopScript();
+  return result.script;
 };
 
-// Movie generation
 export const startMovieGeneration = async (scriptId: number) => {
-  const actor = await getActor();
-  const result = await actor.startMovieGeneration(scriptId);
-  
-  if ('ok' in result) {
-    return result.ok;
-  } else {
-    throw new Error('Failed to start movie generation');
-  }
+  const result = await movieAPI.startMovieGeneration(scriptId.toString());
+  return { ok: true };
 };
 
 export const getMovie = async (scriptId: number) => {
-  const actor = await getActor();
-  const result = await actor.getMovie(scriptId);
-  
-  if ('ok' in result) {
-    return result.ok;
-  } else {
-    throw new Error('Movie not found');
-  }
+  return await movieAPI.getMovie(scriptId.toString());
 };
-
-
-

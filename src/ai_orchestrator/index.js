@@ -1,12 +1,12 @@
 /**
- * Coverce.ai AI Film Generator Orchestrator
+ * Vividverse AI Film Generator Orchestrator
  * 
  * This script orchestrates the AI film generation process:
  * 1. Monitors for scripts ready for generation
  * 2. Parses scripts into scenes
  * 3. Generates video, audio, and images for each scene
  * 4. Stitches everything together with FFmpeg
- * 5. Uploads final movie to ICP storage
+ * 5. Uploads final movie to cloud storage and updates backend
  */
 
 import axios from 'axios';
@@ -482,21 +482,36 @@ async function combineVideoAndAudio(videoPath, audioPath, outputPath) {
 }
 
 /**
- * Upload movie to ICP storage
- * This would integrate with your ICP backend canister
+ * Upload movie to cloud storage and update backend
+ * This integrates with your Node.js/Express backend API
  */
-async function uploadMovieToICP(moviePath, scriptId) {
-  console.log(`Uploading movie to ICP for script ${scriptId}...`);
+async function uploadMovieToBackend(moviePath, scriptId) {
+  console.log(`Uploading movie for script ${scriptId}...`);
   
   // Read movie file
   const movieData = await fs.readFile(moviePath);
   
-  // In production, call your ICP canister's updateMovieProgress method
-  // This is a placeholder - implement based on your ICP backend API
-  const movieHash = `hash_${Date.now()}_${scriptId}`;
+  // In production, upload to cloud storage (AWS S3, Cloudinary, etc.)
+  // and call your backend API's updateMovieProgress method
+  // This is a placeholder - implement based on your backend API
+  const movieUrl = `https://storage.example.com/movies/${scriptId}.mp4`;
+  const thumbnailUrl = `https://storage.example.com/thumbnails/${scriptId}.jpg`;
   
-  console.log(`Movie uploaded with hash: ${movieHash}`);
-  return movieHash;
+  // Call backend API to update movie status
+  const backendUrl = process.env.BACKEND_API_URL || 'http://localhost:5000';
+  try {
+    await axios.put(`${backendUrl}/api/movies/${scriptId}/progress`, {
+      status: 'Completed',
+      progress: 100,
+      videoUrl: movieUrl,
+      thumbnailUrl: thumbnailUrl,
+    });
+  } catch (error) {
+    console.error('Failed to update backend:', error.message);
+  }
+  
+  console.log(`Movie uploaded: ${movieUrl}`);
+  return movieUrl;
 }
 
 // Export for use as module or run as script
@@ -514,8 +529,8 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     try {
       const scriptContent = await fs.readFile(scriptPath, 'utf-8');
       const moviePath = await generateMovie(scriptId, scriptContent);
-      const movieHash = await uploadMovieToICP(moviePath, scriptId);
-      console.log(`Success! Movie hash: ${movieHash}`);
+      const movieUrl = await uploadMovieToBackend(moviePath, scriptId);
+      console.log(`Success! Movie URL: ${movieUrl}`);
     } catch (error) {
       console.error('Failed to generate movie:', error);
       process.exit(1);

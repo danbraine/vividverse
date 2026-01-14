@@ -28,7 +28,7 @@ const Home = () => {
             </>
           ) : (
             <p className="login-prompt">
-              Login with Internet Identity to get started
+              Login or Register to get started
             </p>
           )}
         </div>
@@ -78,7 +78,7 @@ const Home = () => {
           <div className="step">
             <div className="step-number">4</div>
             <h3>Watch</h3>
-            <p>Final film is stored on ICP and available for viewing</p>
+            <p>Final film is stored in cloud storage and available for viewing</p>
           </div>
         </div>
       </div>

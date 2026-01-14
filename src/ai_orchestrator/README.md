@@ -1,6 +1,6 @@
 # AI Film Generator Orchestrator
 
-This service orchestrates the AI film generation process for Coverce.ai.
+This service orchestrates the AI film generation process for Vividverse.
 
 ## Features
 
@@ -9,7 +9,7 @@ This service orchestrates the AI film generation process for Coverce.ai.
 - Generates images/storyboards (DALL-E, Stability, Flux)
 - Generates audio/narration (ElevenLabs, OpenAI TTS)
 - Stitches scenes together with FFmpeg
-- Uploads final movie to ICP storage
+- Uploads final movie to cloud storage and updates backend
 
 ## Setup
 
@@ -69,17 +69,17 @@ const moviePath = await generateMovie(scriptId, scriptContent);
 - **ElevenLabs** (default)
 - OpenAI TTS
 
-## Integration with ICP Backend
+## Integration with Backend
 
-The orchestrator should be called by your ICP backend when a script is selected for generation. You can:
+The orchestrator should be called by your Node.js/Express backend when a script is selected for generation. You can:
 
 1. Set up a cron job or scheduled task
 2. Call the orchestrator via HTTP API
-3. Integrate directly into your Motoko canister (for simpler scripts)
+3. Integrate as a service in your backend
 
 ## Output
 
-Generated movies are saved to the `output/` directory and uploaded to ICP storage with a hash reference.
+Generated movies are saved to the `output/` directory and uploaded to cloud storage (AWS S3, Cloudinary, etc.). The backend API is updated with the movie URL and status.
 
 
 

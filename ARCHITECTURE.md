@@ -1,8 +1,8 @@
-# Coverce.ai Architecture
+# Vividverse Architecture
 
 ## System Overview
 
-Coverce.ai is a decentralized platform for script submission, validation, and AI-powered film generation, built on the Internet Computer Protocol (ICP).
+Vividverse is a platform for script submission, validation, and AI-powered film generation, built with Node.js and React.
 
 ## Architecture Diagram
 
@@ -14,20 +14,27 @@ Coverce.ai is a decentralized platform for script submission, validation, and AI
 │  │   Portal     │  │  Dashboard   │  │   Viewer     │      │
 │  └──────────────┘  └──────────────┘  └──────────────┘      │
 │                                                              │
-│  Internet Identity Authentication                            │
+│  JWT Authentication                                          │
 └──────────────────────┬───────────────────────────────────────┘
                        │
-                       │ HTTPS / Agent Calls
+                       │ HTTPS / REST API
                        │
 ┌──────────────────────▼───────────────────────────────────────┐
-│              ICP Backend (Motoko Canisters)                  │
+│            Backend (Node.js/Express API)                     │
 │  ┌──────────────────────────────────────────────────────┐   │
-│  │         coverce_backend Canister                      │   │
-│  │  • Script Storage                                     │   │
-│  │  • Validation Management                              │   │
-│  │  • Score Aggregation                                  │   │
-│  │  • Movie Metadata                                     │   │
+│  │  • Script Storage (Database)                         │   │
+│  │  • Validation Management                             │   │
+│  │  • Score Aggregation                                 │   │
+│  │  • Movie Metadata                                    │   │
+│  │  • File Upload (Cloud Storage)                       │   │
 │  └──────────────────────────────────────────────────────┘   │
+│                       │                                       │
+│                       │ Database                               │
+│                       ▼                                       │
+│              ┌──────────────────┐                            │
+│              │  MongoDB/        │                            │
+│              │  PostgreSQL      │                            │
+│              └──────────────────┘                            │
 └──────────────────────┬───────────────────────────────────────┘
                        │
                        │ HTTP API Calls
@@ -40,7 +47,7 @@ Coverce.ai is a decentralized platform for script submission, validation, and AI
 │  │  • AI API Integration                                 │   │
 │  │  • Video/Audio/Image Generation                       │   │
 │  │  • FFmpeg Stitching                                   │   │
-│  │  • ICP Upload                                         │   │
+│  │  • Cloud Storage Upload                               │   │
 │  └──────────────────────────────────────────────────────┘   │
 └──────────────────────┬───────────────────────────────────────┘
                        │
@@ -59,48 +66,53 @@ Coverce.ai is a decentralized platform for script submission, validation, and AI
 
 ### 1. Frontend (React + TypeScript)
 
-**Location**: `src/coverce_frontend/`
+**Location**: `frontend/`
 
 **Technologies**:
 - React 18
 - TypeScript
 - Vite
 - React Router
-- @dfinity/agent (ICP integration)
+- Axios (HTTP client)
 
 **Key Components**:
-- `AuthContext` - Internet Identity authentication
-- `coverceService` - ICP backend communication
+- `AuthContext` - JWT authentication
+- `apiService` - REST API communication
 - Pages: Home, SubmitScript, ValidatorDashboard, ScriptList, MovieViewer
 
 **Features**:
-- Internet Identity login (passwordless)
+- JWT-based authentication
 - Script upload (PDF, Fountain, Text)
 - Validation scoring interface
 - Movie playback
 
-### 2. Backend (Motoko)
+### 2. Backend (Node.js/Express)
 
-**Location**: `src/coverce_backend/`
+**Location**: `backend/`
 
-**Canister**: `coverce_backend`
+**Technologies**:
+- Node.js
+- Express.js
+- MongoDB/PostgreSQL
+- JWT authentication
+- Multer (file uploads)
 
-**Key Functions**:
-- `submitScript()` - Store script submissions
-- `submitValidation()` - Record validator scores
-- `getAggregatedScore()` - Calculate average scores
-- `startMovieGeneration()` - Trigger AI generation
-- `updateMovieProgress()` - Update generation status
+**Key Routes**:
+- `POST /api/scripts` - Submit script
+- `POST /api/validations` - Submit validation scores
+- `GET /api/scripts/:id/score` - Get aggregated scores
+- `POST /api/movies/generate` - Trigger AI generation
+- `PUT /api/movies/:id/progress` - Update generation status
 
-**Data Structures**:
-- Scripts HashMap (ID → ScriptSubmission)
-- Validations HashMap (ScriptID → [ValidationScore])
-- AggregatedScores HashMap (ScriptID → AggregatedScore)
-- Movies HashMap (ScriptID → Movie)
+**Data Models**:
+- Script (ID, title, content, author, status, createdAt)
+- Validation (scriptId, validatorId, scores, comments)
+- AggregatedScore (scriptId, averageScores, totalValidations)
+- Movie (scriptId, videoUrl, status, progress)
 
 ### 3. AI Orchestrator (Node.js)
 
-**Location**: `src/ai_orchestrator/`
+**Location**: `ai-orchestrator/`
 
 **Technologies**:
 - Node.js
@@ -117,26 +129,27 @@ Coverce.ai is a decentralized platform for script submission, validation, and AI
    - Audio generation (ElevenLabs/OpenAI)
 4. Combine video + audio per scene
 5. Stitch all scenes with FFmpeg
-6. Upload final movie to ICP storage
+6. Upload final movie to cloud storage
 
 ## Data Flow
 
 ### Script Submission Flow
 
 ```
-User → Frontend → Internet Identity Auth → Backend Canister
-                                              ↓
-                                         Store Script
-                                              ↓
-                                         Status: PendingValidation
+User → Frontend → JWT Auth → Express API
+                                    ↓
+                            Store Script (Database)
+                            Upload File (Cloud Storage)
+                                    ↓
+                            Status: PendingValidation
 ```
 
 ### Validation Flow
 
 ```
-Validator → Frontend → Backend Canister
+Validator → Frontend → Express API
                             ↓
-                    Store Validation Score
+                    Store Validation Score (Database)
                             ↓
                     Recalculate Aggregated Score
                             ↓
@@ -146,7 +159,7 @@ Validator → Frontend → Backend Canister
 ### Movie Generation Flow
 
 ```
-Top Script Selected → Backend Canister
+Top Script Selected → Express API
                             ↓
                     Status: Selected
                             ↓
@@ -158,58 +171,62 @@ Top Script Selected → Backend Canister
                             ↓
                     Stitch with FFmpeg
                             ↓
-                    Upload to ICP Storage
+                    Upload to Cloud Storage
                             ↓
-                    Update Backend: Status = Completed
+                    Update Database: Status = Completed
                             ↓
                     Frontend: Display Movie
 ```
 
 ## Storage
 
-### ICP Canister Storage
+### Database Storage
 
-- **Scripts**: Stored as Blob in canister
-- **Metadata**: ScriptSubmission structs
-- **Validations**: Array of ValidationScore
-- **Movies**: Movie metadata (hash reference to storage)
+- **Scripts**: Metadata stored in MongoDB/PostgreSQL
+- **Script Files**: Uploaded to cloud storage (AWS S3, Cloudinary)
+- **Validations**: Stored as documents/rows in database
+- **Movies**: Metadata in database, video files in cloud storage
 
-### External Storage (Future)
+### Cloud Storage
 
-- Large movie files can be stored on:
-  - ICP asset canisters
-  - IPFS
-  - Decentralized storage (Arweave, Filecoin)
+- Large files (scripts, movies) stored on:
+  - AWS S3
+  - Cloudinary
+  - Google Cloud Storage
+  - Azure Blob Storage
 
 ## Security
 
 ### Authentication
-- Internet Identity (WebAuthn-based)
-- No passwords stored
-- Principal-based authorization
+- JWT tokens (stateless)
+- Password hashing (bcrypt)
+- Token expiration and refresh
 
 ### Authorization
+- Role-based access control (RBAC)
 - Validators must register
-- Script authors identified by Principal
-- Can add admin roles for movie generation triggers
+- Script authors identified by user ID
+- Admin roles for movie generation triggers
 
 ### Data Integrity
 - Script content hashing
-- Immutable validation records
+- Database transactions for consistency
 - Timestamped submissions
+- Input validation and sanitization
 
 ## Scalability Considerations
 
 ### Current MVP
-- Single canister (sufficient for MVP)
+- Single backend instance (sufficient for MVP)
 - Sequential processing
-- Basic storage
+- Basic database and storage
 
 ### Future Scaling
-- **Sharding**: Multiple canisters for scripts
+- **Horizontal Scaling**: Multiple backend instances with load balancer
+- **Database**: Read replicas, connection pooling
 - **CDN**: For movie delivery
-- **Queue System**: For AI generation jobs
-- **Caching**: For frequently accessed data
+- **Queue System**: Redis/RabbitMQ for AI generation jobs
+- **Caching**: Redis for frequently accessed data
 - **Load Balancing**: Multiple orchestrator instances
 
 ## Integration Points
@@ -228,17 +245,18 @@ Top Script Selected → Backend Canister
 ## Monitoring & Observability
 
 ### Recommended Tools
-- ICP Dashboard (canister metrics)
+- Application monitoring (New Relic, Datadog)
 - Logging service (for orchestrator)
 - Error tracking (Sentry)
 - Analytics (user behavior)
 
 ## Cost Estimation
 
-### ICP Cycles
-- Canister storage: ~$5-20/month per GB
-- Compute: Minimal for MVP
-- Frontend hosting: Included
+### Infrastructure Costs (Monthly)
+- Database hosting: ~$10-50 (MongoDB Atlas/PostgreSQL)
+- Cloud storage: ~$5-20 per GB (AWS S3, Cloudinary)
+- Backend hosting: ~$10-50 (Heroku, Railway, AWS)
+- Frontend hosting: ~$0-20 (Vercel, Netlify)
 
 ### AI API Costs
 - Video generation: $0.10-1.00 per minute

@@ -1,19 +1,12 @@
 {
   "name": "vividverse",
   "version": "0.1.0",
-  "description": "VividVerse - AI-Powered Film Generation Platform on ICP",
+  "description": "VividVerse - AI-Powered Film Generation Platform",
   "scripts": {
-    "dev": "dfx start",
-    "deploy:local": "dfx deploy",
-    "deploy:ic": "dfx deploy --network ic",
-    "build": "dfx build",
-    "generate": "dfx generate"
+    "dev": "echo 'Start backend: cd backend && npm run dev' && echo 'Start frontend: cd src/coverce_frontend && npm run dev'",
+    "install:all": "npm install && cd backend && npm install && cd ../src/coverce_frontend && npm install && cd ../ai_orchestrator && npm install"
   },
   "dependencies": {
-    "@dfinity/agent": "^2.0.0",
-    "@dfinity/auth-client": "^2.0.0",
-    "@dfinity/identity": "^2.0.0",
-    "@dfinity/ledger-icp": "^2.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.20.0"

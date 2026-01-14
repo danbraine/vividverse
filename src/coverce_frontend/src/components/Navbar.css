@@ -94,10 +94,12 @@
   gap: 1rem;
 }
 
-.principal {
+.principal,
+.user-name {
   font-size: 0.9rem;
   color: rgba(255, 255, 255, 0.7);
   font-family: monospace;
+  font-weight: 500;
 }
 
 .btn-login,

@@ -8,29 +8,46 @@ const Home = () => {
   return (
     <div className="home">
       <div className="hero">
-        <h1 className="hero-tagline">Harnessing Human Imagination</h1>
-        <p className="hero-subtitle">
-          The world's first decentralised studio where creators and critics get paid to power a global imagination flywheel.
-        </p>
-        <p className="hero-description">
-          {/* Vividverse, a canvas of human imagination. A studio owned by the world, authored by the world. Stories told by the world. */}
-        </p>
-        
-        <div className="hero-actions">
-          {isAuthenticated ? (
-            <>
-              <Link to="/submit" className="btn btn-primary">
-                Submit Your Script
-              </Link>
-              <Link to="/validate" className="btn btn-secondary">
-                Become a Validator
-              </Link>
-            </>
-          ) : (
-            <p className="login-prompt">
-              Login or Register to get started
+        <div className="hero-content">
+          <div className="hero-text">
+            <h1 className="hero-tagline">
+              <span className="tagline-word">Harnessing</span>
+              <span className="tagline-word">Human</span>
+              <span className="tagline-word">Imagination</span>
+            </h1>
+            <p className="hero-subtitle">
+              The world's first decentralised studio where creators and critics get paid to power a global imagination flywheel.
             </p>
-          )}
+            <div className="hero-actions">
+              {isAuthenticated ? (
+                <>
+                  <Link to="/submit" className="btn btn-primary">
+                    Submit Your Script
+                  </Link>
+                  <Link to="/validate" className="btn btn-secondary">
+                    Become a Validator
+                  </Link>
+                </>
+              ) : (
+                <p className="login-prompt">
+                  Login or Register to get started
+                </p>
+              )}
+            </div>
+          </div>
+          <div className="hero-vortex">
+            <div className="cosmic-vortex">
+              <div className="vortex-core"></div>
+              <div className="vortex-spiral spiral-1"></div>
+              <div className="vortex-spiral spiral-2"></div>
+              <div className="vortex-spiral spiral-3"></div>
+              <div className="vortex-energy-waves">
+                <div className="energy-wave wave-1"></div>
+                <div className="energy-wave wave-2"></div>
+                <div className="energy-wave wave-3"></div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

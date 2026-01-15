@@ -238,6 +238,68 @@
   flex-wrap: wrap;
 }
 
+/* Compact Featured Story */
+.featured-excerpt.compact {
+  padding: 1.5rem 1.75rem;
+  margin: 0 2rem 2rem;
+  border-radius: 1.25rem;
+}
+
+.excerpt-header.compact {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  justify-content: flex-start;
+  margin-bottom: 0.75rem;
+  text-align: left;
+}
+
+.excerpt-title {
+  font-size: 1.35rem;
+  margin: 0;
+  font-weight: 700;
+  background: linear-gradient(135deg, #fff 0%, #a8b5ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.excerpt-text.compact {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+  text-align: left;
+}
+
+.excerpt-content.compact {
+  max-width: 100%;
+}
+
+.writing-prompt.compact {
+  padding: 1rem 1.25rem;
+  margin-top: 0.75rem;
+}
+
+.prompt-content .prompt-inline {
+  margin: 0 0 0.75rem 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  opacity: 0.95;
+}
+
+.btn-prompt.compact {
+  padding: 0.6rem 1.25rem;
+  font-size: 0.9rem;
+}
+
+.excerpt-stats.compact {
+  margin-top: 0.75rem;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+  opacity: 0.8;
+  justify-content: flex-start;
+}
+
 .studio-header {
   text-align: center;
   margin-bottom: 3rem;
@@ -344,6 +406,14 @@
 .section-header {
   margin-bottom: 2.5rem;
   text-align: center;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.section-title {
+  text-align: left;
 }
 
 .section-header h2 {
@@ -363,11 +433,78 @@
   font-weight: 300;
 }
 
+.view-toggle {
+  display: inline-flex;
+  gap: 0.5rem;
+  padding: 0.3rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.view-btn {
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.view-btn:hover {
+  color: rgba(255, 255, 255, 0.95);
+  background: rgba(102, 126, 234, 0.12);
+  border-color: rgba(102, 126, 234, 0.3);
+}
+
+.view-btn.active {
+  color: #ffffff;
+  background: rgba(102, 126, 234, 0.25);
+  border-color: rgba(102, 126, 234, 0.45);
+  box-shadow: 0 0 16px rgba(102, 126, 234, 0.35);
+}
+
 .fragments-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
   gap: 2rem;
   margin-bottom: 4rem;
+}
+
+.fragments-grid.list {
+  grid-template-columns: 1fr;
+}
+
+.fragments-grid.list .fragment-card {
+  padding: 1.5rem 1.75rem;
+}
+
+.fragments-grid.list .fragment-content {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.fragments-grid.list .fragment-ai-prompt {
+  padding: 0.9rem 1rem;
+  margin: 1rem 0;
+}
+
+.fragments-grid.list .fragment-footer {
+  margin-top: 1rem;
+  padding-top: 1rem;
+}
+
+.fragments-grid.list .fragment-actions .btn {
+  padding: 0.55rem 1rem;
+  font-size: 0.85rem;
+}
+
+.fragments-grid.gallery {
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
 }
 
 .fragment-card {
@@ -1212,6 +1349,12 @@
     font-size: 1rem;
   }
 
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
   .writing-interface {
     padding: 2rem 1.5rem;
   }
@@ -1247,26 +1390,26 @@
 /* Zen Mode Toggle Button */
 .zen-mode-toggle {
   position: fixed;
-  top: 100px;
-  right: 2rem;
-  z-index: 1000;
+  bottom: 24px;
+  left: 24px;
+  z-index: 1200;
 }
 
 .btn-zen-mode {
-  padding: 0.75rem 1.5rem;
+  padding: 0.4rem 0.9rem;
   background: rgba(102, 126, 234, 0.2);
   backdrop-filter: blur(20px);
   border: 1px solid rgba(102, 126, 234, 0.4);
-  border-radius: 2rem;
+  border-radius: 1.25rem;
   color: white;
-  font-weight: 600;
-  font-size: 0.95rem;
+  font-weight: 500;
+  font-size: 0.8rem;
   cursor: pointer;
   transition: all 0.3s;
   box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.35rem;
 }
 
 .btn-zen-mode:hover {
@@ -1288,44 +1431,6 @@
   position: relative;
 }
 
-.zen-header {
-  position: fixed;
-  top: 0;
-  right: 0;
-  left: 0;
-  padding: 1.5rem 2rem;
-  display: flex;
-  justify-content: flex-end;
-  z-index: 100;
-  background: rgba(10, 10, 15, 0.8);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(102, 126, 234, 0.2);
-}
-
-.btn-zen-exit {
-  padding: 0.75rem 1.5rem;
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 1rem;
-  color: rgba(255, 255, 255, 0.9);
-  font-weight: 600;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: all 0.3s;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.btn-zen-exit:hover {
-  background: rgba(255, 107, 107, 0.25);
-  border-color: rgba(255, 107, 107, 0.5);
-  color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 25px rgba(255, 107, 107, 0.3);
-}
 
 .zen-content {
   max-width: 900px;

@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import './Studio.css';
 
@@ -34,8 +33,7 @@ interface Story {
 }
 
 const Studio = () => {
-  const { isAuthenticated, user, login, loading: authLoading } = useAuth();
-  const navigate = useNavigate();
+  const { isAuthenticated, login, loading: authLoading } = useAuth();
   const [activeTab, setActiveTab] = useState<'explore' | 'create' | 'my-workspace'>('explore');
   const [trendingFragments, setTrendingFragments] = useState<StoryFragment[]>([]);
   const [activeStories, setActiveStories] = useState<Story[]>([]);
@@ -47,6 +45,7 @@ const Studio = () => {
   const [selectedParentFragment, setSelectedParentFragment] = useState<StoryFragment | null>(null);
   const [zenMode, setZenMode] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [fragmentView, setFragmentView] = useState<'list' | 'gallery'>('list');
 
 
   const loadContent = async () => {
@@ -193,6 +192,23 @@ const Studio = () => {
     setActiveTab('create');
   };
 
+  const toggleZenMode = () => {
+    if (zenMode) {
+      setZenMode(false);
+      if (!newFragment.trim()) {
+        setWritingMode(false);
+        setSelectedStory(null);
+        setSelectedParentFragment(null);
+      }
+      return;
+    }
+
+    setZenMode(true);
+    if (!writingMode && featuredStory) {
+      handleStartWriting(featuredStory);
+    }
+  };
+
   const handleSubmitFragment = async () => {
     if (!newFragment.trim()) return;
     
@@ -271,20 +287,13 @@ const Studio = () => {
   if (zenMode) {
     return (
       <div className="studio zen-mode">
-        <div className="zen-header">
+        <div className="zen-mode-toggle">
           <button 
-            className="btn-zen-exit"
-            onClick={() => {
-              setZenMode(false);
-              if (!newFragment.trim()) {
-                setWritingMode(false);
-                setSelectedStory(null);
-                setSelectedParentFragment(null);
-              }
-            }}
-            title="Exit Zen Mode"
+            className="btn-zen-mode"
+            onClick={toggleZenMode}
+            title="Toggle Zen Mode"
           >
-            ✕ Exit Zen Mode
+            🧘 Zen Mode (On)
           </button>
         </div>
         
@@ -351,11 +360,8 @@ const Studio = () => {
             <button 
               className="btn btn-secondary btn-exit-zen"
               onClick={() => {
-                setZenMode(false);
+                toggleZenMode();
                 setNewFragment('');
-                setWritingMode(false);
-                setSelectedStory(null);
-                setSelectedParentFragment(null);
               }}
               disabled={submitting}
             >
@@ -385,14 +391,8 @@ const Studio = () => {
       <div className="zen-mode-toggle">
         <button 
           className="btn-zen-mode"
-          onClick={() => {
-            setZenMode(true);
-            // If not in writing mode, start with featured story
-            if (!writingMode && featuredStory) {
-              handleStartWriting(featuredStory);
-            }
-          }}
-          title="Enter Zen Mode - Focus on writing"
+          onClick={toggleZenMode}
+          title="Toggle Zen Mode - Focus on writing"
         >
           🧘 Zen Mode
         </button>
@@ -400,35 +400,34 @@ const Studio = () => {
 
       {/* Featured Story Excerpt - Creative Prompt */}
       {featuredStory && (
-        <div className="featured-excerpt">
-          <div className="excerpt-header">
-            <div className="excerpt-badge">✨ Featured Story</div>
-            <h2>{featuredStory.title}</h2>
+        <div className="featured-excerpt compact">
+          <div className="excerpt-header compact">
+            <div className="excerpt-badge">✨ Featured</div>
+            <h3 className="excerpt-title">{featuredStory.title}</h3>
           </div>
-          <div className="excerpt-content">
-            <p className="excerpt-text">{featuredStory.excerpt}</p>
+          <div className="excerpt-content compact">
+            <p className="excerpt-text compact">{featuredStory.excerpt}</p>
             {featuredStory.currentPrompt && (
-              <div className="writing-prompt">
+              <div className="writing-prompt compact">
                 <div className="prompt-icon">💡</div>
                 <div className="prompt-content">
-                  <h4>Your Creative Prompt</h4>
-                  <p>{featuredStory.currentPrompt}</p>
+                  <p className="prompt-inline">{featuredStory.currentPrompt}</p>
                   <button 
-                    className="btn btn-primary btn-prompt"
+                    className="btn btn-primary btn-prompt compact"
                     onClick={() => handleStartWriting(featuredStory)}
                   >
-                    Continue This Story →
+                    Continue →
                   </button>
                 </div>
               </div>
             )}
           </div>
-          <div className="excerpt-stats">
-            <span>🔥 {featuredStory.viralScore} viral score</span>
+          <div className="excerpt-stats compact">
+            <span>🔥 {featuredStory.viralScore}</span>
             <span>•</span>
-            <span>{featuredStory.fragmentCount} fragments</span>
+            <span>{featuredStory.fragmentCount} frags</span>
             <span>•</span>
-            <span>{featuredStory.contributorCount} contributors</span>
+            <span>{featuredStory.contributorCount} miners</span>
           </div>
         </div>
       )}
@@ -465,11 +464,29 @@ const Studio = () => {
         {activeTab === 'explore' && (
           <div className="explore-view">
             <div className="section-header">
-              <h2>Trending Fragments</h2>
-              <p>Viral ideas validated by the network - build on what's working</p>
+              <div className="section-title">
+                <h2>Trending Fragments</h2>
+                <p>Viral ideas validated by the network - build on what's working</p>
+              </div>
+              <div className="view-toggle">
+                <button
+                  className={`view-btn ${fragmentView === 'list' ? 'active' : ''}`}
+                  onClick={() => setFragmentView('list')}
+                  title="List view"
+                >
+                  List
+                </button>
+                <button
+                  className={`view-btn ${fragmentView === 'gallery' ? 'active' : ''}`}
+                  onClick={() => setFragmentView('gallery')}
+                  title="Gallery view"
+                >
+                  Gallery
+                </button>
+              </div>
             </div>
             
-            <div className="fragments-grid">
+            <div className={`fragments-grid ${fragmentView}`}>
               {loading && trendingFragments.length === 0 ? (
                 <div className="loading-state">Loading fragments...</div>
               ) : (

@@ -1,13 +1,14 @@
 # Deployment Guide
 
-This guide walks you through deploying Coverce.ai MVP to ICP.
+This guide walks you through deploying Vividverse MVP to production.
 
 ## Prerequisites
 
-1. **DFX SDK** - Install from [Internet Computer docs](https://internetcomputer.org/docs/current/developer-docs/setup/install/)
-2. **Node.js 18+** - For frontend development
-3. **Internet Identity** - Set up for authentication
+1. **Node.js 18+** - For backend and frontend
+2. **Database** - MongoDB Atlas or PostgreSQL (cloud recommended)
+3. **Cloud Storage** - AWS S3, Cloudinary, or similar
 4. **API Keys** - For AI services (OpenAI, ElevenLabs, Luma, etc.)
+5. **Hosting** - Heroku, Railway, AWS, Vercel, etc.
 
 ## Local Development Setup
 
@@ -17,71 +18,102 @@ This guide walks you through deploying Coverce.ai MVP to ICP.
 # Install root dependencies
 npm install
 
-# Install frontend dependencies
-cd src/coverce_frontend
+# Install backend dependencies
+cd backend
 npm install
+cd ..
+
+# Install frontend dependencies
+cd frontend
+npm install
+cd ..
 
 # Install AI orchestrator dependencies
-cd ../../src/ai_orchestrator
+cd ai-orchestrator
 npm install
+cd ..
 ```
 
-### 2. Start Local ICP Network
+### 2. Set Up Environment Variables
 
 ```bash
-dfx start
+cp .env.example .env
+# Edit .env with your configuration
 ```
 
-This starts a local ICP replica on `http://localhost:8000`.
+### 3. Start Database
 
-### 3. Deploy Canisters Locally
+Use a cloud database service (recommended) or local:
+- MongoDB Atlas (free tier available)
+- PostgreSQL on Railway/Heroku
+- Local MongoDB/PostgreSQL
+
+### 4. Start Development Servers
 
 ```bash
-# Generate TypeScript bindings
-dfx generate
+# Terminal 1: Backend
+cd backend && npm run dev
 
-# Deploy canisters
-dfx deploy
+# Terminal 2: Frontend
+cd frontend && npm run dev
 ```
 
-### 4. Start Frontend Development Server
+## Deploying to Production
+
+### Option 1: Heroku
+
+#### Backend Deployment
 
 ```bash
-cd src/coverce_frontend
-npm run dev
+# Install Heroku CLI
+# Login to Heroku
+heroku login
+
+# Create app
+cd backend
+heroku create vividverse-backend
+
+# Set environment variables
+heroku config:set NODE_ENV=production
+heroku config:set DATABASE_URL=your_database_url
+heroku config:set JWT_SECRET=your_jwt_secret
+# ... add other env vars
+
+# Deploy
+git push heroku main
 ```
 
-The frontend will be available at `http://localhost:3000`.
-
-## Deploying to ICP Mainnet
-
-### 1. Get ICP Cycles
-
-You'll need cycles to deploy canisters. Get them from:
-- [Cycles Faucet](https://faucet.dfinity.org/) (for testing)
-- [NNS Dapp](https://nns.ic0.app/) (convert ICP to cycles)
-
-### 2. Create Identity
+#### Frontend Deployment
 
 ```bash
-dfx identity new production
-dfx identity use production
+cd frontend
+# Build for production
+npm run build
+
+# Deploy to Vercel/Netlify
+vercel --prod
+# or
+netlify deploy --prod
 ```
 
-### 3. Deploy to Mainnet
+### Option 2: Railway
 
-```bash
-# Deploy backend canister
-dfx deploy --network ic coverce_backend
+1. Connect your GitHub repository
+2. Create services for backend and frontend
+3. Set environment variables in Railway dashboard
+4. Deploy automatically on push
 
-# Deploy frontend canister
-dfx deploy --network ic coverce_frontend
-```
+### Option 3: AWS/Google Cloud
+
+- Use EC2/Compute Engine for backend
+- Use S3/Cloud Storage for files
+- Use RDS/Cloud SQL for database
+- Use CloudFront/CDN for frontend
 
 ### 4. Update Frontend Configuration
 
-After deployment, update the canister IDs in:
-- `src/coverce_frontend/src/services/coverceService.ts`
+After deployment, update the API URL in:
+- `frontend/src/services/api.js`
 - Environment variables
 
 ## Setting Up AI Orchestrator
@@ -109,30 +141,49 @@ The orchestrator can run as:
 
 ## Environment Variables
 
-### Frontend (.env in coverce_frontend/)
+### Backend (.env in backend/)
 
 ```env
-CANISTER_ID_COVERCE_BACKEND=your_canister_id
-DFX_NETWORK=ic
+NODE_ENV=production
+PORT=5000
+DATABASE_URL=mongodb://... or postgresql://...
+JWT_SECRET=your_secret_key
+CLOUD_STORAGE_PROVIDER=aws|cloudinary|s3
+AWS_ACCESS_KEY_ID=...
+AWS_SECRET_ACCESS_KEY=...
+AWS_BUCKET_NAME=...
+# or Cloudinary
+CLOUDINARY_CLOUD_NAME=...
+CLOUDINARY_API_KEY=...
+CLOUDINARY_API_SECRET=...
 ```
 
-### AI Orchestrator (.env in ai_orchestrator/)
+### Frontend (.env in frontend/)
+
+```env
+VITE_API_URL=https://your-backend-url.com
+VITE_APP_NAME=Vividverse
+```
+
+### AI Orchestrator (.env in ai-orchestrator/)
 
 See `env.example` for all required variables.
 
 ## Troubleshooting
 
-### Canister Deployment Fails
+### Database Connection Fails
 
-- Check you have enough cycles: `dfx wallet balance`
-- Verify identity: `dfx identity whoami`
-- Check network: `dfx ping --network ic`
+- Check connection string format
+- Verify database credentials
+- Ensure database is accessible from hosting provider
+- Check firewall/security group settings
 
 ### Frontend Can't Connect to Backend
 
-- Verify canister IDs match in `coverceService.ts`
-- Check CORS settings if using custom domain
-- Ensure backend canister is deployed
+- Verify API URL matches backend deployment URL
+- Check CORS settings in backend
+- Ensure backend is deployed and running
+- Check network/firewall settings
 
 ### AI Generation Fails
 
@@ -143,25 +194,30 @@ See `env.example` for all required variables.
 
 ## Production Checklist
 
-- [ ] Deploy canisters to ICP mainnet
+- [ ] Deploy backend to hosting service
+- [ ] Deploy frontend to hosting service
+- [ ] Set up production database
+- [ ] Configure cloud storage
+- [ ] Set up environment variables
 - [ ] Configure custom domain (optional)
 - [ ] Set up monitoring/logging
 - [ ] Configure API rate limiting
-- [ ] Set up backup for script storage
+- [ ] Set up backup for database and storage
 - [ ] Configure CDN for movie delivery
 - [ ] Set up error tracking (Sentry, etc.)
 - [ ] Configure SSL certificates
 - [ ] Set up CI/CD pipeline
 - [ ] Load testing
+- [ ] Security audit
 
 ## Next Steps
 
 After MVP deployment:
-1. Add Bittensor subnet integration
-2. Implement TAO rewards
-3. Add validator staking
-4. Scale AI generation infrastructure
-5. Add analytics and monitoring
+1. Monitor performance and errors
+2. Scale infrastructure as needed
+3. Add analytics and monitoring
+4. Implement caching strategies
+5. Optimize database queries
 
 
 

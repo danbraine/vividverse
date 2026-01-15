@@ -1,11 +1,12 @@
 # Quick Start Guide
 
-Get Coverce.ai MVP running in 10 minutes.
+Get Vividverse MVP running in 10 minutes.
 
 ## Prerequisites
 
 - Node.js 18+ installed
-- DFX SDK installed ([Install Guide](https://internetcomputer.org/docs/current/developer-docs/setup/install/))
+- MongoDB or PostgreSQL installed (or use cloud service like MongoDB Atlas)
+- FFmpeg installed (for video processing)
 
 ## Step 1: Clone and Install
 
@@ -13,50 +14,72 @@ Get Coverce.ai MVP running in 10 minutes.
 # Install root dependencies
 npm install
 
-# Install frontend dependencies
-cd src/coverce_frontend
+# Install backend dependencies
+cd backend
 npm install
-cd ../..
+cd ..
+
+# Install frontend dependencies
+cd frontend
+npm install
+cd ..
+
+# Install AI orchestrator dependencies
+cd ai-orchestrator
+npm install
+cd ..
 ```
 
-## Step 2: Start Local ICP Network
+## Step 2: Set Up Environment Variables
 
 ```bash
-dfx start
+# Copy environment template
+cp .env.example .env
+
+# Edit .env with your configuration:
+# - Database connection string
+# - JWT secret key
+# - Cloud storage credentials (AWS S3, Cloudinary, etc.)
+# - AI API keys (OpenAI, ElevenLabs, etc.)
 ```
 
-Keep this terminal open. The local network runs on `http://localhost:8000`.
+## Step 3: Start Database
 
-## Step 3: Deploy Canisters
+```bash
+# MongoDB (local)
+mongod
+
+# Or use MongoDB Atlas (cloud) - update connection string in .env
+# Or PostgreSQL (local)
+pg_ctl start
+```
+
+## Step 4: Start Backend
 
 In a new terminal:
 
 ```bash
-# Generate TypeScript bindings
-dfx generate
-
-# Deploy canisters
-dfx deploy
+cd backend
+npm run dev
 ```
 
-This will:
-- Deploy the Motoko backend canister
-- Deploy the frontend asset canister
-- Generate TypeScript types for frontend
+The backend API will be available at `http://localhost:5000` (or your configured port).
 
-## Step 4: Start Frontend
+## Step 5: Start Frontend
+
+In a new terminal:
 
 ```bash
-cd src/coverce_frontend
+cd frontend
 npm run dev
 ```
 
 The frontend will be available at `http://localhost:3000`.
 
-## Step 5: Test the Application
+## Step 6: Test the Application
 
 1. **Open** `http://localhost:3000` in your browser
-2. **Login** with Internet Identity (creates a local identity)
+2. **Register/Login** with email and password
 3. **Submit a Script**:
    - Click "Submit Script"
    - Enter title and upload a file
@@ -101,36 +124,41 @@ To test the AI orchestrator:
 
 ## Troubleshooting
 
-### "dfx: command not found"
-Install DFX SDK: https://internetcomputer.org/docs/current/developer-docs/setup/install/
-
-### "Cannot connect to local network"
-Make sure `dfx start` is running in another terminal.
+### "Cannot connect to database"
+- Make sure your database is running
+- Check connection string in `.env` file
+- Verify database credentials
 
 ### Frontend can't connect to backend
-- Check canister IDs in `src/coverce_frontend/src/services/coverceService.ts`
-- Run `dfx generate` to update bindings
-- Restart frontend dev server
+- Check backend is running on the correct port
+- Verify API URL in `frontend/src/services/api.js`
+- Check CORS settings in backend
+- Restart both frontend and backend servers
 
-### Internet Identity not working locally
-For local development, Internet Identity uses a local canister. Make sure it's deployed:
-```bash
-dfx deploy internet_identity
-```
+### Authentication not working
+- Verify JWT secret is set in `.env`
+- Check token expiration settings
+- Ensure cookies/localStorage is enabled in browser
+
+### File upload fails
+- Check cloud storage credentials in `.env`
+- Verify file size limits in backend
+- Check upload directory permissions
 
 ## Next Steps
 
 - Read [ARCHITECTURE.md](./ARCHITECTURE.md) for system design
 - Read [DEPLOYMENT.md](./DEPLOYMENT.md) for production deployment
-- Customize AI providers in `src/ai_orchestrator/index.js`
-- Add your own validation logic in `src/coverce_backend/main.mo`
+- Customize AI providers in `ai-orchestrator/index.js`
+- Add your own validation logic in `backend/src/`
 
 ## Getting Help
 
 - Check [README.md](./README.md) for overview
 - Review code comments in source files
-- ICP Docs: https://internetcomputer.org/docs/
-- Motoko Docs: https://internetcomputer.org/docs/current/motoko/main/motoko
+- Node.js Docs: https://nodejs.org/docs/
+- Express Docs: https://expressjs.com/
+- React Docs: https://react.dev/
 
 
 

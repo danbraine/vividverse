@@ -579,6 +579,148 @@
   line-height: 1.6;
 }
 
+/* Light Mode Styles */
+[data-theme="light"] .hero {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  box-shadow: 0 4px 24px rgba(99, 102, 241, 0.08), 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+[data-theme="light"] .cosmic-vortex {
+  opacity: 0.85;
+  filter: brightness(0.95) contrast(1.1);
+}
+
+[data-theme="light"] .vortex-core {
+  background: radial-gradient(
+    ellipse,
+    #4f46e5 0%,
+    #6366f1 20%,
+    #818cf8 40%,
+    #a5b4fc 60%,
+    transparent 100%
+  );
+  box-shadow: 
+    0 0 25px rgba(79, 70, 229, 0.8),
+    0 0 50px rgba(99, 102, 241, 0.6),
+    0 0 75px rgba(129, 140, 248, 0.4);
+}
+
+[data-theme="light"] .vortex-spiral {
+  opacity: 0.9;
+}
+
+[data-theme="light"] .spiral-1 {
+  border-color: #6366f1;
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+  box-shadow: 
+    0 0 10px rgba(99, 102, 241, 0.6),
+    0 0 20px rgba(99, 102, 241, 0.4),
+    inset 0 0 12px rgba(99, 102, 241, 0.25);
+}
+
+[data-theme="light"] .spiral-2 {
+  border-color: #8b5cf6;
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+  box-shadow: 
+    0 0 12px rgba(139, 92, 246, 0.7),
+    0 0 24px rgba(139, 92, 246, 0.5),
+    inset 0 0 15px rgba(139, 92, 246, 0.3);
+}
+
+[data-theme="light"] .spiral-3 {
+  border-color: #d946ef;
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+  box-shadow: 
+    0 0 15px rgba(217, 70, 239, 0.8),
+    0 0 30px rgba(217, 70, 239, 0.6),
+    inset 0 0 18px rgba(217, 70, 239, 0.35);
+}
+
+[data-theme="light"] .energy-wave {
+  opacity: 0.8;
+}
+
+[data-theme="light"] .wave-1 {
+  border-color: rgba(99, 102, 241, 0.7);
+  box-shadow: 
+    0 0 8px rgba(99, 102, 241, 0.6),
+    0 0 16px rgba(99, 102, 241, 0.4),
+    inset 0 0 10px rgba(99, 102, 241, 0.25);
+}
+
+[data-theme="light"] .wave-2 {
+  border-color: rgba(139, 92, 246, 0.75);
+  box-shadow: 
+    0 0 10px rgba(139, 92, 246, 0.7),
+    0 0 20px rgba(139, 92, 246, 0.5),
+    inset 0 0 12px rgba(139, 92, 246, 0.3);
+}
+
+[data-theme="light"] .wave-3 {
+  border-color: rgba(217, 70, 239, 0.8);
+  box-shadow: 
+    0 0 12px rgba(217, 70, 239, 0.8),
+    0 0 24px rgba(217, 70, 239, 0.6),
+    inset 0 0 15px rgba(217, 70, 239, 0.35);
+}
+
+[data-theme="light"] .particle {
+  opacity: 0.75;
+}
+
+[data-theme="light"] .particle:nth-child(3n) {
+  background: #8b5cf6;
+  box-shadow: 0 0 5px rgba(139, 92, 246, 0.9);
+}
+
+[data-theme="light"] .particle:nth-child(3n+1) {
+  background: #d946ef;
+  box-shadow: 0 0 5px rgba(217, 70, 239, 0.9);
+}
+
+[data-theme="light"] .particle:nth-child(4n) {
+  background: #f59e0b;
+  box-shadow: 0 0 5px rgba(245, 158, 11, 0.9);
+}
+
+[data-theme="light"] .feature-card {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.08);
+}
+
+[data-theme="light"] .feature-card:hover {
+  background: rgba(255, 255, 255, 1);
+  border-color: rgba(99, 102, 241, 0.25);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
+  transform: translateY(-8px);
+}
+
+[data-theme="light"] .how-it-works {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  box-shadow: 0 4px 24px rgba(99, 102, 241, 0.08);
+}
+
+[data-theme="light"] .step:hover {
+  background: rgba(99, 102, 241, 0.05);
+}
+
+[data-theme="light"] .btn-secondary {
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--text);
+  border: 2px solid rgba(99, 102, 241, 0.25);
+}
+
+[data-theme="light"] .btn-secondary:hover {
+  background: rgba(255, 255, 255, 1);
+  border-color: rgba(99, 102, 241, 0.4);
+}
+
 @media (max-width: 768px) {
   .hero-content {
     flex-direction: column;
@@ -617,6 +759,38 @@
   .steps {
     grid-template-columns: 1fr;
   }
+}
+
+/* Light theme UX pass */
+[data-theme="light"] .hero,
+[data-theme="light"] .feature-card,
+[data-theme="light"] .how-it-works {
+  background: var(--surface);
+  border-color: var(--border);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+[data-theme="light"] .hero-subtitle,
+[data-theme="light"] .hero-description,
+[data-theme="light"] .login-prompt,
+[data-theme="light"] .feature-card p,
+[data-theme="light"] .step p {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .feature-card h3,
+[data-theme="light"] .step h3 {
+  color: var(--text-strong);
+}
+
+[data-theme="light"] .btn-secondary {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+[data-theme="light"] .step:hover {
+  background: var(--surface-alt);
 }
 
 

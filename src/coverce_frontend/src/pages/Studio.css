@@ -1583,6 +1583,139 @@
   font-weight: 600;
 }
 
+
+/* Light Mode Styles for Studio */
+[data-theme="light"] .studio {
+  background: #f6f7fb;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.08) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.08) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(99, 102, 241, 0.03) 0px, transparent 50%);
+}
+
+[data-theme="light"] .studio::before {
+  background: 
+    linear-gradient(45deg, transparent 30%, rgba(99, 102, 241, 0.02) 50%, transparent 70%),
+    linear-gradient(-45deg, transparent 30%, rgba(139, 92, 246, 0.02) 50%, transparent 70%);
+}
+
+[data-theme="light"] .featured-excerpt {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.12);
+}
+
+[data-theme="light"] .featured-excerpt::before {
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.06) 0%, transparent 70%);
+}
+
+[data-theme="light"] .excerpt-badge {
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+}
+
+[data-theme="light"] .tabs-container {
+  border-bottom: 2px solid rgba(99, 102, 241, 0.15);
+}
+
+[data-theme="light"] .tab-button {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .tab-button:hover {
+  color: var(--text);
+  background: rgba(99, 102, 241, 0.05);
+}
+
+[data-theme="light"] .tab-button.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+[data-theme="light"] .fragment-card,
+[data-theme="light"] .story-card {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  box-shadow: 0 2px 12px rgba(99, 102, 241, 0.08);
+}
+
+[data-theme="light"] .fragment-card:hover,
+[data-theme="light"] .story-card:hover {
+  border-color: rgba(99, 102, 241, 0.3);
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.15);
+}
+
+[data-theme="light"] .fragment-tag,
+[data-theme="light"] .story-tag {
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--accent);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+[data-theme="light"] .writing-interface {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.12);
+}
+
+[data-theme="light"] .prompt-card {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  box-shadow: 0 2px 12px rgba(99, 102, 241, 0.1);
+}
+
+[data-theme="light"] .prompt-card::before {
+  background: radial-gradient(circle at top left, rgba(99, 102, 241, 0.12) 0%, transparent 50%);
+}
+
+[data-theme="light"] .fragment-textarea {
+  background: rgba(255, 255, 255, 0.98);
+  border: 2px solid rgba(99, 102, 241, 0.2);
+  color: var(--text);
+}
+
+[data-theme="light"] .fragment-textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  background: #ffffff;
+}
+
+[data-theme="light"] .fragment-textarea::placeholder {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .zen-mode {
+  background: rgba(246, 247, 251, 0.98);
+}
+
+[data-theme="light"] .zen-content {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+[data-theme="light"] .zen-prompt {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.12);
+}
+
+[data-theme="light"] .zen-editor {
+  background: rgba(255, 255, 255, 0.98);
+  border: 2px solid rgba(99, 102, 241, 0.25);
+  color: var(--text);
+}
+
+[data-theme="light"] .zen-editor::placeholder {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .zen-editor:focus {
+  border-color: var(--accent);
+  box-shadow: 
+    0 0 0 4px rgba(99, 102, 241, 0.1),
+    0 0 40px rgba(99, 102, 241, 0.15);
+  background: #ffffff;
+}
+
 @media (max-width: 768px) {
   .zen-mode-toggle {
     top: 80px;
@@ -1623,4 +1756,68 @@
   .zen-actions .btn {
     width: 100%;
   }
+}
+
+/* Light theme UX pass */
+[data-theme="light"] .studio {
+  background: var(--bg);
+}
+
+[data-theme="light"] .featured-excerpt,
+[data-theme="light"] .writing-prompt,
+[data-theme="light"] .fragment-card,
+[data-theme="light"] .story-card,
+[data-theme="light"] .writing-interface,
+[data-theme="light"] .create-option-card,
+[data-theme="light"] .stat-card,
+[data-theme="light"] .my-contributions,
+[data-theme="light"] .fragment-ai-prompt,
+[data-theme="light"] .writing-prompt-box,
+[data-theme="light"] .zen-prompt,
+[data-theme="light"] .zen-editor {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+[data-theme="light"] .excerpt-text,
+[data-theme="light"] .fragment-content,
+[data-theme="light"] .story-description,
+[data-theme="light"] .prompt-text,
+[data-theme="light"] .ai-prompt-text,
+[data-theme="light"] .zen-prompt-text p,
+[data-theme="light"] .studio-subtitle,
+[data-theme="light"] .section-header p,
+[data-theme="light"] .metric-label,
+[data-theme="light"] .fragment-meta span,
+[data-theme="light"] .story-meta span {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .section-header h2,
+[data-theme="light"] .studio-header h1,
+[data-theme="light"] .excerpt-title,
+[data-theme="light"] .story-header h3 {
+  color: var(--text-strong);
+  -webkit-text-fill-color: initial;
+  background: none;
+  text-shadow: none;
+}
+
+[data-theme="light"] .tab {
+  background: var(--surface);
+  color: var(--text-muted);
+  border-color: var(--border);
+}
+
+[data-theme="light"] .tab.active {
+  color: var(--text-strong);
+  background: var(--surface-strong);
+}
+
+[data-theme="light"] .tag {
+  background: #eef2ff;
+  color: #4338ca;
+  border-color: rgba(67, 56, 202, 0.2);
 }

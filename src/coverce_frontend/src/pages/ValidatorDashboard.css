@@ -757,6 +757,7 @@
   font-size: 1.2rem;
 }
 
+
 @media (max-width: 1024px) {
   .dashboard-content {
     grid-template-columns: 1fr;
@@ -778,6 +779,74 @@
   }
 }
 
+/* Light Mode Styles for Validator Dashboard */
+[data-theme="light"] .dashboard-container {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  box-shadow: 0 4px 24px rgba(99, 102, 241, 0.1);
+}
+
+[data-theme="light"] .dashboard-header {
+  border-bottom-color: rgba(99, 102, 241, 0.15);
+}
+
+[data-theme="light"] .stat-item {
+  background: rgba(99, 102, 241, 0.08);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+[data-theme="light"] .fragment-card {
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  box-shadow: 0 2px 12px rgba(99, 102, 241, 0.08);
+}
+
+[data-theme="light"] .fragment-card:hover,
+[data-theme="light"] .fragment-card.selected {
+  border-color: rgba(99, 102, 241, 0.3);
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.15);
+}
+
+[data-theme="light"] .validation-panel {
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.12);
+}
+
+[data-theme="light"] .validation-form {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(99, 102, 241, 0.15);
+}
+
+[data-theme="light"] .score-input {
+  background: rgba(255, 255, 255, 0.98);
+  border: 2px solid rgba(99, 102, 241, 0.2);
+  color: var(--text);
+}
+
+[data-theme="light"] .score-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+[data-theme="light"] .feedback-textarea {
+  background: rgba(255, 255, 255, 0.98);
+  border: 2px solid rgba(99, 102, 241, 0.2);
+  color: var(--text);
+}
+
+[data-theme="light"] .feedback-textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+[data-theme="light"] .register-validator,
+[data-theme="light"] .auth-required {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  box-shadow: 0 4px 24px rgba(99, 102, 241, 0.1);
+}
+
 @media (max-width: 768px) {
   .validator-dashboard {
     padding: 1rem;
@@ -794,4 +863,52 @@
   .fragment-cards {
     max-height: none;
   }
+}
+
+/* Light theme UX pass */
+[data-theme="light"] .dashboard-container,
+[data-theme="light"] .fragment-card,
+[data-theme="light"] .validation-panel,
+[data-theme="light"] .register-validator,
+[data-theme="light"] .auth-required,
+[data-theme="light"] .fragment-ai-prompt,
+[data-theme="light"] .fragment-preview,
+[data-theme="light"] .stat-item {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+[data-theme="light"] .dashboard-header {
+  border-bottom-color: var(--border);
+}
+
+[data-theme="light"] .subtitle,
+[data-theme="light"] .fragment-content,
+[data-theme="light"] .fragment-ai-prompt p,
+[data-theme="light"] .fragment-time,
+[data-theme="light"] .label-desc,
+[data-theme="light"] .comments-section textarea::placeholder,
+[data-theme="light"] .register-validator p,
+[data-theme="light"] .auth-required p,
+[data-theme="light"] .empty-state p,
+[data-theme="light"] .stat-label,
+[data-theme="light"] .loading {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .comments-section textarea {
+  background: var(--surface-alt);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+[data-theme="light"] .filter-tab {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .filter-tab.active {
+  color: var(--text-strong);
+  background: var(--surface-strong);
 }

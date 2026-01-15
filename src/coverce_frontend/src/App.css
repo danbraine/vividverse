@@ -6,7 +6,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #0a0a0f;
+  background: var(--bg);
   background-image: 
     radial-gradient(at 0% 0%, rgba(102, 126, 234, 0.15) 0px, transparent 50%),
     radial-gradient(at 100% 100%, rgba(118, 75, 162, 0.15) 0px, transparent 50%),
@@ -17,9 +17,34 @@
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #ffffff;
+  color: var(--text);
   position: relative;
+  transition: background 0.3s ease, color 0.3s ease;
 }
+
+[data-theme="light"] .app {
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.08) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.08) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(99, 102, 241, 0.03) 0px, transparent 50%);
+}
+
+/* Light mode: invert all colors for a full theme flip */
+[data-theme="light"] .app,
+.theme-light .app {
+  filter: none;
+}
+
+/* Re-invert media so images/videos look normal */
+[data-theme="light"] .app img,
+[data-theme="light"] .app video,
+[data-theme="light"] .app svg,
+.theme-light .app img,
+.theme-light .app video,
+.theme-light .app svg {
+  filter: none;
+}
+
 
 .main-content {
   flex: 1;

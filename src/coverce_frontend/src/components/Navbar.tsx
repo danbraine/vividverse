@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import vividverseLogo from '../vividverse_logo.svg';
@@ -6,6 +7,27 @@ import './Navbar.css';
 const Navbar = () => {
   const { isAuthenticated, user, login, logout } = useAuth();
   const navigate = useNavigate();
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+
+  const applyTheme = (nextTheme: 'dark' | 'light') => {
+    document.documentElement.dataset.theme = nextTheme;
+    document.body.dataset.theme = nextTheme;
+    document.documentElement.classList.toggle('theme-light', nextTheme === 'light');
+    document.documentElement.classList.toggle('theme-dark', nextTheme === 'dark');
+  };
+
+  useEffect(() => {
+    const savedTheme = (localStorage.getItem('vividverse_theme') as 'dark' | 'light') || 'dark';
+    setTheme(savedTheme);
+    applyTheme(savedTheme);
+  }, []);
+
+  const toggleTheme = () => {
+    const nextTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(nextTheme);
+    applyTheme(nextTheme);
+    localStorage.setItem('vividverse_theme', nextTheme);
+  };
 
   const handleLogout = async () => {
     await logout();
@@ -28,6 +50,16 @@ const Navbar = () => {
         </div>
         
         <div className="navbar-auth">
+          <button
+            className="theme-toggle"
+            onClick={toggleTheme}
+            title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            aria-label="Toggle theme"
+          >
+            <span className="theme-icon">
+              {theme === 'dark' ? '☀︎' : '☾'}
+            </span>
+          </button>
           {isAuthenticated ? (
             <div className="auth-info">
               <span className="user-name">

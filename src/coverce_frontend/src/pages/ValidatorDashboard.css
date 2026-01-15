@@ -115,7 +115,7 @@
 
 .dashboard-content {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  /* grid-template-columns: 1fr 1fr; */
   gap: 2.5rem;
   margin-top: 2rem;
 }
@@ -204,6 +204,12 @@
   max-height: calc(100vh - 300px);
   overflow-y: auto;
   padding-right: 0.5rem;
+  align-items: stretch;
+}
+
+.fragment-cards > .fragment-card {
+  flex: 0 0 auto;
+  min-height: 0;
 }
 
 .fragment-cards::-webkit-scrollbar {
@@ -225,6 +231,11 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
+  min-height: auto;
+  height: auto;
+  max-height: none;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .fragment-card::before {
@@ -306,6 +317,13 @@
   font-size: 1.05rem;
   font-style: italic;
   font-weight: 300;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  display: block;
+  max-height: none;
+  overflow: visible;
+  text-overflow: clip;
 }
 
 .fragment-ai-prompt {
@@ -314,6 +332,8 @@
   border-radius: 0.5rem;
   padding: 1rem;
   margin: 1rem 0;
+  overflow: visible;
+  max-height: none;
 }
 
 .prompt-label {
@@ -332,6 +352,9 @@
   line-height: 1.6;
   margin: 0;
   font-style: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
 }
 
 .fragment-meta {

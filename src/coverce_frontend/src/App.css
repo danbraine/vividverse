@@ -23,16 +23,16 @@
 
 .main-content {
   flex: 1;
-  padding: 2rem;
-  max-width: 1400px;
+  /* padding: 2rem; */
+  /* max-width: 1400px; */
   margin: 0 auto;
   width: 100%;
 }
 
 @media (max-width: 768px) {
-  .main-content {
+  /* .main-content {
     padding: 1rem;
-  }
+  } */
 }
 
 

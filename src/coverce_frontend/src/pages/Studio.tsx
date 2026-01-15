@@ -387,6 +387,7 @@ const Studio = () => {
 
   return (
     <div className="studio">
+      <div className="studio-container">
       {/* Zen Mode Button */}
       <div className="zen-mode-toggle">
         <button 
@@ -465,7 +466,14 @@ const Studio = () => {
           <div className="explore-view">
             <div className="section-header">
               <div className="section-title">
-                <h2>Trending Fragments</h2>
+                <h2>
+                  <span className="trending-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M7 17L17 7M17 7H7M17 7V17" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </span>
+                  Trending Fragments
+                </h2>
                 <p>Viral ideas validated by the network - build on what's working</p>
               </div>
               <div className="view-toggle">
@@ -757,6 +765,7 @@ const Studio = () => {
             </div>
           </div>
         )}
+      </div>
       </div>
     </div>
   );

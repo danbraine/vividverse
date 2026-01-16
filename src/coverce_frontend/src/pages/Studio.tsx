@@ -32,9 +32,25 @@ interface Story {
   currentPrompt?: string; // Current prompt for next fragment
 }
 
+interface VideoSegment {
+  id: string;
+  fragmentId: string;
+  fragmentContent: string;
+  videoUrl?: string;
+  thumbnailUrl?: string;
+  creatorId: string;
+  creatorName: string;
+  status: 'pending' | 'validating' | 'approved' | 'rejected';
+  validationScore?: number;
+  validatorCount: number;
+  uploadedAt: Date;
+  aiModel?: string;
+  duration?: number;
+}
+
 const Studio = () => {
   const { isAuthenticated, login, loading: authLoading } = useAuth();
-  const [activeTab, setActiveTab] = useState<'explore' | 'create' | 'my-workspace'>('explore');
+  const [activeTab, setActiveTab] = useState<'explore' | 'create' | 'videos' | 'my-workspace'>('explore');
   const [trendingFragments, setTrendingFragments] = useState<StoryFragment[]>([]);
   const [activeStories, setActiveStories] = useState<Story[]>([]);
   const [featuredStory, setFeaturedStory] = useState<Story | null>(null);
@@ -46,6 +62,10 @@ const Studio = () => {
   const [zenMode, setZenMode] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [fragmentView, setFragmentView] = useState<'list' | 'gallery'>('list');
+  const [approvedFragments, setApprovedFragments] = useState<StoryFragment[]>([]);
+  const [videoSegments, setVideoSegments] = useState<VideoSegment[]>([]);
+  const [selectedFragmentForVideo, setSelectedFragmentForVideo] = useState<StoryFragment | null>(null);
+  const [uploadingVideo, setUploadingVideo] = useState(false);
 
 
   const loadContent = async () => {
@@ -178,6 +198,55 @@ const Studio = () => {
           prompt: 'A surreal dreamscape marketplace where memories float like bubbles. A figure moves through this ethereal space, capturing dreams in glass containers. The scene is both beautiful and haunting.',
         },
       ]);
+
+      // Load approved fragments ready for video creation
+      setApprovedFragments([
+        {
+          id: '101',
+          content: 'In a world where memories can be traded like currency, a young thief discovers she can steal the most valuable memories of all: the moments people wish they could forget. But when she accidentally takes a memory that reveals a conspiracy threatening to destroy the memory market itself, she must decide whether to return it or use it to change everything.',
+          author: 'miner_0x123',
+          authorName: 'Alex',
+          viralScore: 95,
+          consensusScore: 9.2,
+          validatorCount: 52,
+          upvotes: 145,
+          createdAt: new Date(),
+          tags: ['sci-fi', 'thriller', 'memory'],
+          prompt: 'A dark, futuristic cityscape at night. A young woman in a hooded jacket moves through neon-lit streets, her eyes glowing with stolen memories. Show the contrast between the vibrant city and her isolated, dangerous mission.',
+        },
+        {
+          id: '102',
+          content: 'The librarian\'s hand trembled as she reached for the entry. The book pulsed with an otherworldly energy, and as her fingers touched the ancient pages, she saw it: the final words weren\'t a goodbye, but a warning—a message from the future telling her that she was the one who would rewrite everything.',
+          author: 'miner_0x456',
+          authorName: 'Sam',
+          viralScore: 92,
+          consensusScore: 9.0,
+          validatorCount: 48,
+          upvotes: 132,
+          createdAt: new Date(),
+          tags: ['fantasy', 'mystery', 'time'],
+          prompt: 'An ancient library with floating books and glowing words. A woman reaches for a book that pulses with dangerous energy, her expression a mix of fear and determination. The atmosphere is mystical and foreboding.',
+        },
+      ]);
+
+      // Load existing video segments
+      setVideoSegments([
+        {
+          id: 'vid1',
+          fragmentId: '101',
+          fragmentContent: 'In a world where memories can be traded like currency...',
+          videoUrl: 'https://example.com/video1.mp4',
+          thumbnailUrl: 'https://example.com/thumb1.jpg',
+          creatorId: 'creator_0x001',
+          creatorName: 'VideoArtist_Alpha',
+          status: 'validating',
+          validationScore: 8.5,
+          validatorCount: 12,
+          uploadedAt: new Date(Date.now() - 86400000 * 2),
+          aiModel: 'Runway Gen-3',
+          duration: 45,
+        },
+      ]);
     } catch (error) {
       console.error('Error loading content:', error);
     } finally {
@@ -207,6 +276,8 @@ const Studio = () => {
     if (!writingMode && featuredStory) {
       handleStartWriting(featuredStory);
     }
+    // Scroll to top when entering Zen Mode
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleSubmitFragment = async () => {
@@ -452,6 +523,12 @@ const Studio = () => {
           onClick={() => setActiveTab('create')}
         >
           Create
+        </button>
+        <button
+          className={`tab ${activeTab === 'videos' ? 'active' : ''}`}
+          onClick={() => setActiveTab('videos')}
+        >
+          🎬 Video Submissions
         </button>
         <button
           className={`tab ${activeTab === 'my-workspace' ? 'active' : ''}`}
@@ -732,6 +809,203 @@ const Studio = () => {
                 </div>
               </div>
             )}
+          </div>
+        )}
+
+        {activeTab === 'videos' && (
+          <div className="videos-view">
+            <div className="section-header">
+              <h2>🎬 Video Submissions</h2>
+              <p>Create AI-generated videos for approved story fragments. Submit your work for validator review.</p>
+            </div>
+
+            <div className="video-submission-info">
+              <div className="info-card">
+                <h3>How it works:</h3>
+                <ol>
+                  <li>Select an approved fragment below (high consensus score from validators)</li>
+                  <li>Generate an AI video using the fragment's scene prompt</li>
+                  <li>Upload your video and provide technical details</li>
+                  <li>Video validators review your work on visual quality, adherence to script, and cinematography</li>
+                  <li>Approved videos are integrated into the final story</li>
+                </ol>
+              </div>
+            </div>
+
+            <div className="section-header" style={{ marginTop: '2rem' }}>
+              <h3>Approved Fragments Ready for Video Creation</h3>
+              <p>These fragments have been validated and scored highly by the network</p>
+            </div>
+
+            <div className="approved-fragments-grid">
+              {approvedFragments.map((fragment) => (
+                <div key={fragment.id} className="approved-fragment-card">
+                  <div className="fragment-badge">✅ Approved</div>
+                  <div className="fragment-scores">
+                    <span className="consensus-badge">⭐ {fragment.consensusScore}/10</span>
+                    <span className="validator-count">{fragment.validatorCount} validators</span>
+                  </div>
+                  
+                  <p className="fragment-content">{fragment.content}</p>
+                  
+                  {fragment.prompt && (
+                    <div className="scene-prompt">
+                      <div className="prompt-label">🎬 Scene Prompt:</div>
+                      <p className="prompt-text">{fragment.prompt}</p>
+                    </div>
+                  )}
+                  
+                  <div className="fragment-tags">
+                    {fragment.tags.map((tag) => (
+                      <span key={tag} className="tag">{tag}</span>
+                    ))}
+                  </div>
+                  
+                  <button 
+                    className="btn btn-primary btn-create-video"
+                    onClick={() => setSelectedFragmentForVideo(fragment)}
+                  >
+                    Create Video for This Fragment
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            {selectedFragmentForVideo && (
+              <div className="video-upload-modal">
+                <div className="modal-overlay" onClick={() => setSelectedFragmentForVideo(null)} />
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h3>Submit AI-Generated Video</h3>
+                    <button 
+                      className="btn-close"
+                      onClick={() => setSelectedFragmentForVideo(null)}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                  
+                  <div className="fragment-reference">
+                    <h4>Fragment:</h4>
+                    <p>{selectedFragmentForVideo.content}</p>
+                  </div>
+                  
+                  <div className="video-upload-form">
+                    <div className="form-group">
+                      <label>Video File (MP4, MOV, WebM)</label>
+                      <input 
+                        type="file" 
+                        accept="video/*"
+                        className="file-input"
+                      />
+                      <p className="help-text">Max size: 500MB. Recommended: 1920x1080, 30fps</p>
+                    </div>
+                    
+                    <div className="form-group">
+                      <label>AI Model Used</label>
+                      <select className="form-select">
+                        <option>Runway Gen-3</option>
+                        <option>Luma Dream Machine</option>
+                        <option>Pika 1.0</option>
+                        <option>Stable Video Diffusion</option>
+                        <option>Other</option>
+                      </select>
+                    </div>
+                    
+                    <div className="form-group">
+                      <label>Generation Prompt (optional)</label>
+                      <textarea 
+                        className="form-textarea"
+                        placeholder="The exact prompt you used to generate this video..."
+                        rows={4}
+                      />
+                    </div>
+                    
+                    <div className="form-group">
+                      <label>Technical Notes (optional)</label>
+                      <textarea 
+                        className="form-textarea"
+                        placeholder="Any post-processing, editing, or technical details..."
+                        rows={3}
+                      />
+                    </div>
+                    
+                    <div className="modal-actions">
+                      <button 
+                        className="btn btn-secondary"
+                        onClick={() => setSelectedFragmentForVideo(null)}
+                      >
+                        Cancel
+                      </button>
+                      <button 
+                        className="btn btn-primary"
+                        disabled={uploadingVideo}
+                      >
+                        {uploadingVideo ? 'Uploading...' : 'Submit Video'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="section-header" style={{ marginTop: '3rem' }}>
+              <h3>Recent Video Submissions</h3>
+              <p>Your submitted videos and their validation status</p>
+            </div>
+
+            <div className="video-segments-grid">
+              {videoSegments.length === 0 ? (
+                <div className="empty-state">
+                  <p>No videos submitted yet. Select an approved fragment above to create your first video!</p>
+                </div>
+              ) : (
+                videoSegments.map((video) => (
+                  <div key={video.id} className="video-segment-card">
+                    <div className="video-thumbnail">
+                      {video.thumbnailUrl ? (
+                        <img src={video.thumbnailUrl} alt="Video thumbnail" />
+                      ) : (
+                        <div className="placeholder-thumbnail">🎬</div>
+                      )}
+                      {video.duration && (
+                        <div className="video-duration">{video.duration}s</div>
+                      )}
+                    </div>
+                    
+                    <div className="video-info">
+                      <div className="video-header">
+                        <span className={`status-badge ${video.status}`}>
+                          {video.status}
+                        </span>
+                        {video.validationScore && (
+                          <span className="score-badge">
+                            ⭐ {video.validationScore}/10
+                          </span>
+                        )}
+                      </div>
+                      
+                      <p className="fragment-preview">{video.fragmentContent.slice(0, 100)}...</p>
+                      
+                      <div className="video-meta">
+                        <span>🎨 {video.aiModel}</span>
+                        <span>•</span>
+                        <span>👥 {video.validatorCount} validators</span>
+                      </div>
+                      
+                      <div className="video-actions">
+                        <button className="btn btn-sm btn-secondary">
+                          View Video
+                        </button>
+                        <button className="btn btn-sm btn-secondary">
+                          View Feedback
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
           </div>
         )}
 

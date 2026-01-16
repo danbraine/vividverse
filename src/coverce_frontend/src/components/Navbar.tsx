@@ -35,48 +35,54 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar">
-      <div className="navbar-container">
-        <Link to="/" className="navbar-brand">
-          <img src={vividverseLogo} alt="VividVerse" className="navbar-logo" />
-          <span className="navbar-brand-text">VividVerse</span>
-        </Link>
-        
-        <div className="navbar-links">
-          <Link to="/studio" className="nav-link">Studio</Link>
-          {isAuthenticated && (
-            <Link to="/validate" className="nav-link">Validate</Link>
-          )}
-        </div>
-        
-        <div className="navbar-auth">
-          <button
-            className="theme-toggle"
-            onClick={toggleTheme}
-            title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-            aria-label="Toggle theme"
-          >
-            <span className="theme-icon">
-              {theme === 'dark' ? '☀︎' : '☾'}
+    <>
+      <button
+        className="theme-toggle"
+        onClick={toggleTheme}
+        title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+        aria-label="Toggle theme"
+      >
+        <span className="theme-icon">
+          {theme === 'dark' ? '☀︎' : '☾'}
+        </span>
+      </button>
+      
+      <nav className="navbar">
+        <div className="navbar-container">
+          <Link to="/" className="navbar-brand">
+            <img src={vividverseLogo} alt="VividVerse" className="navbar-logo" />
+            <span className="navbar-brand-text">
+              <span className="brand-v">V</span>
+              <span className="brand-rest">ividVerse</span>
             </span>
-          </button>
-          {isAuthenticated ? (
-            <div className="auth-info">
-              <span className="user-name">
-                {user?.name || user?.email?.slice(0, 8)}...
-              </span>
-              <button onClick={handleLogout} className="btn-logout">
-                Logout
+          </Link>
+          
+          <div className="navbar-links">
+            <Link to="/studio" className="nav-link">Studio</Link>
+            {isAuthenticated && (
+              <Link to="/validate" className="nav-link">Validate</Link>
+            )}
+          </div>
+          
+          <div className="navbar-auth">
+            {isAuthenticated ? (
+              <div className="auth-info">
+                <span className="user-name">
+                  {user?.name || user?.email?.slice(0, 8)}...
+                </span>
+                <button onClick={handleLogout} className="btn-logout">
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <button onClick={() => navigate('/')} className="btn-login">
+                Login
               </button>
-            </div>
-          ) : (
-            <button onClick={() => navigate('/')} className="btn-login">
-              Login
-            </button>
-          )}
+            )}
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </>
   );
 };
 

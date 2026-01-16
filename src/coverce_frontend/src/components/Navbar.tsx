@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import Notifications from './Notifications';
 import vividverseLogo from '../vividverse_logo.svg';
 import './Navbar.css';
 
@@ -58,13 +59,19 @@ const Navbar = () => {
           </Link>
           
           <div className="navbar-links">
+            <Link to="/watch" className="nav-link">Watch</Link>
             <Link to="/studio" className="nav-link">Studio</Link>
             {isAuthenticated && (
               <Link to="/validate" className="nav-link">Validate</Link>
             )}
+            <Link to="/community" className="nav-link">Community</Link>
+            {isAuthenticated && (
+              <Link to="/analytics" className="nav-link">Analytics</Link>
+            )}
           </div>
           
           <div className="navbar-auth">
+            {isAuthenticated && <Notifications />}
             {isAuthenticated ? (
               <div className="auth-info">
                 <span className="user-name">

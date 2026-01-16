@@ -66,6 +66,20 @@ const Studio = () => {
   const [videoSegments, setVideoSegments] = useState<VideoSegment[]>([]);
   const [selectedFragmentForVideo, setSelectedFragmentForVideo] = useState<StoryFragment | null>(null);
   const [uploadingVideo, setUploadingVideo] = useState(false);
+  
+  // Advanced Filters State
+  const [showFilters, setShowFilters] = useState(false);
+  const [filters, setFilters] = useState({
+    genre: [] as string[],
+    consensusMin: 0,
+    consensusMax: 10,
+    dateFrom: '',
+    dateTo: '',
+    tags: [] as string[],
+    creator: '',
+    status: 'all' as 'all' | 'pending' | 'approved' | 'featured',
+  });
+  const [sortBy, setSortBy] = useState<'newest' | 'consensus' | 'viral' | 'trending' | 'controversial'>('trending');
 
 
   const loadContent = async () => {
@@ -553,23 +567,157 @@ const Studio = () => {
                 </h2>
                 <p>Viral ideas validated by the network - build on what's working</p>
               </div>
-              <div className="view-toggle">
+              <div className="section-controls">
                 <button
-                  className={`view-btn ${fragmentView === 'list' ? 'active' : ''}`}
-                  onClick={() => setFragmentView('list')}
-                  title="List view"
+                  className="btn-filters"
+                  onClick={() => setShowFilters(!showFilters)}
                 >
-                  List
+                  🔍 Filters {showFilters ? '▼' : '▶'}
                 </button>
-                <button
-                  className={`view-btn ${fragmentView === 'gallery' ? 'active' : ''}`}
-                  onClick={() => setFragmentView('gallery')}
-                  title="Gallery view"
+                <select
+                  className="sort-select"
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
                 >
-                  Gallery
-                </button>
+                  <option value="trending">🔥 Trending</option>
+                  <option value="newest">🆕 Newest</option>
+                  <option value="consensus">⭐ Highest Consensus</option>
+                  <option value="viral">📈 Most Viral</option>
+                  <option value="controversial">⚡ Controversial</option>
+                </select>
+                <div className="view-toggle">
+                  <button
+                    className={`view-btn ${fragmentView === 'list' ? 'active' : ''}`}
+                    onClick={() => setFragmentView('list')}
+                    title="List view"
+                  >
+                    List
+                  </button>
+                  <button
+                    className={`view-btn ${fragmentView === 'gallery' ? 'active' : ''}`}
+                    onClick={() => setFragmentView('gallery')}
+                    title="Gallery view"
+                  >
+                    Gallery
+                  </button>
+                </div>
               </div>
             </div>
+
+            {/* Advanced Filters Panel */}
+            {showFilters && (
+              <div className="filters-panel">
+                <div className="filters-row">
+                  <div className="filter-group">
+                    <label>Genre</label>
+                    <div className="genre-checkboxes">
+                      {['Sci-Fi', 'Fantasy', 'Horror', 'Romance', 'Mystery', 'Thriller'].map((genre) => (
+                        <label key={genre} className="checkbox-label">
+                          <input
+                            type="checkbox"
+                            checked={filters.genre.includes(genre)}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setFilters({ ...filters, genre: [...filters.genre, genre] });
+                              } else {
+                                setFilters({ ...filters, genre: filters.genre.filter((g) => g !== genre) });
+                              }
+                            }}
+                          />
+                          {genre}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div className="filter-group">
+                    <label>Consensus Score Range</label>
+                    <div className="range-inputs">
+                      <input
+                        type="number"
+                        min="0"
+                        max="10"
+                        step="0.1"
+                        value={filters.consensusMin}
+                        onChange={(e) => setFilters({ ...filters, consensusMin: parseFloat(e.target.value) })}
+                        placeholder="Min"
+                      />
+                      <span>to</span>
+                      <input
+                        type="number"
+                        min="0"
+                        max="10"
+                        step="0.1"
+                        value={filters.consensusMax}
+                        onChange={(e) => setFilters({ ...filters, consensusMax: parseFloat(e.target.value) })}
+                        placeholder="Max"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="filter-group">
+                    <label>Date Range</label>
+                    <div className="date-inputs">
+                      <input
+                        type="date"
+                        value={filters.dateFrom}
+                        onChange={(e) => setFilters({ ...filters, dateFrom: e.target.value })}
+                      />
+                      <span>to</span>
+                      <input
+                        type="date"
+                        value={filters.dateTo}
+                        onChange={(e) => setFilters({ ...filters, dateTo: e.target.value })}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="filter-group">
+                    <label>Creator</label>
+                    <input
+                      type="text"
+                      placeholder="Search by username..."
+                      value={filters.creator}
+                      onChange={(e) => setFilters({ ...filters, creator: e.target.value })}
+                    />
+                  </div>
+
+                  <div className="filter-group">
+                    <label>Status</label>
+                    <select
+                      value={filters.status}
+                      onChange={(e) => setFilters({ ...filters, status: e.target.value as typeof filters.status })}
+                    >
+                      <option value="all">All</option>
+                      <option value="pending">Pending</option>
+                      <option value="approved">Approved</option>
+                      <option value="featured">Featured</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="filters-actions">
+                  <button
+                    className="btn btn-secondary"
+                    onClick={() => {
+                      setFilters({
+                        genre: [],
+                        consensusMin: 0,
+                        consensusMax: 10,
+                        dateFrom: '',
+                        dateTo: '',
+                        tags: [],
+                        creator: '',
+                        status: 'all',
+                      });
+                    }}
+                  >
+                    Clear Filters
+                  </button>
+                  <button className="btn btn-primary">Apply Filters</button>
+                </div>
+              </div>
+            )}
             
             <div className={`fragments-grid ${fragmentView}`}>
               {loading && trendingFragments.length === 0 ? (

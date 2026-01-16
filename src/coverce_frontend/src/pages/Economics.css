@@ -1,0 +1,453 @@
+.economics {
+  min-height: 100vh;
+  background: var(--bg, #0a0a0f);
+  padding: 2rem 1rem;
+}
+
+.economics-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.economics-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.economics-header h1 {
+  font-size: 3rem;
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
+}
+
+.economics-header .subtitle {
+  color: var(--text-secondary, rgba(255, 255, 255, 0.6));
+  font-size: 1.1rem;
+}
+
+.economics-section {
+  background: var(--surface, rgba(255, 255, 255, 0.05));
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border, rgba(102, 126, 234, 0.2));
+  border-radius: 20px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.economics-section h2 {
+  font-size: 1.8rem;
+  color: var(--text, #ffffff);
+  margin: 0 0 0.5rem 0;
+}
+
+.section-desc {
+  color: var(--text-secondary, rgba(255, 255, 255, 0.6));
+  margin-bottom: 1.5rem;
+}
+
+/* Network Stats Grid */
+.network-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem;
+  background: var(--surface-dark, rgba(0, 0, 0, 0.3));
+  border: 1px solid var(--border, rgba(102, 126, 234, 0.2));
+  border-radius: 16px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  border-color: #fbbf24;
+  box-shadow: 0 8px 25px rgba(251, 191, 36, 0.3);
+}
+
+.stat-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.stat-value {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #fbbf24;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  color: var(--text-secondary, rgba(255, 255, 255, 0.6));
+  font-size: 0.9rem;
+}
+
+/* Reward Distribution */
+.reward-distribution {
+  margin-top: 1.5rem;
+}
+
+.distribution-chart {
+  display: flex;
+  height: 60px;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.distribution-segment {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.distribution-segment:nth-child(1) {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.distribution-segment:nth-child(2) {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.distribution-segment:nth-child(3) {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+}
+
+.distribution-segment:hover {
+  filter: brightness(1.2);
+}
+
+.segment-label {
+  color: white;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.distribution-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.legend-color {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.legend-color.color-0 {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.legend-color.color-1 {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.legend-color.color-2 {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+}
+
+.legend-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.legend-category {
+  color: var(--text, #ffffff);
+  font-weight: 600;
+}
+
+.legend-value {
+  color: var(--text-secondary, rgba(255, 255, 255, 0.6));
+  font-size: 0.9rem;
+}
+
+.reward-pool {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: var(--surface-dark, rgba(0, 0, 0, 0.3));
+  border: 1px solid #fbbf24;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--text, #ffffff);
+}
+
+.pool-amount {
+  color: #fbbf24;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+/* Personal Economics */
+.personal-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.personal-card {
+  padding: 1.5rem;
+  background: var(--surface-dark, rgba(0, 0, 0, 0.3));
+  border: 1px solid var(--border, rgba(102, 126, 234, 0.2));
+  border-radius: 16px;
+  transition: all 0.3s ease;
+}
+
+.personal-card:hover {
+  border-color: #fbbf24;
+  transform: translateY(-3px);
+}
+
+.personal-card.main-card {
+  grid-column: span 2;
+  border-color: #fbbf24;
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(0, 0, 0, 0.3) 100%);
+}
+
+.personal-label {
+  color: var(--text-secondary, rgba(255, 255, 255, 0.6));
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.personal-value {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #fbbf24;
+  margin-bottom: 0.25rem;
+}
+
+.personal-usd {
+  color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+  font-size: 1.1rem;
+}
+
+.personal-change {
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.personal-change.positive {
+  color: #10b981;
+}
+
+.personal-change.negative {
+  color: #ef4444;
+}
+
+.personal-meta {
+  color: var(--text-secondary, rgba(255, 255, 255, 0.6));
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+/* Reward Calculator */
+.calculator {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+.calculator-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.input-group label {
+  color: var(--text, #ffffff);
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.input-group input[type='range'] {
+  width: 100%;
+  height: 8px;
+  background: var(--surface-dark, rgba(0, 0, 0, 0.3));
+  border-radius: 4px;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.input-group input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.input-group input[type='range']::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+}
+
+.input-value {
+  color: #fbbf24;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.calculator-output {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  background: var(--surface-dark, rgba(0, 0, 0, 0.3));
+  border: 2px solid #fbbf24;
+  border-radius: 16px;
+  text-align: center;
+}
+
+.output-label {
+  color: var(--text-secondary, rgba(255, 255, 255, 0.6));
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.output-value {
+  font-size: 3rem;
+  font-weight: bold;
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
+}
+
+.output-usd {
+  color: var(--text, #ffffff);
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+}
+
+.output-note {
+  color: var(--text-secondary, rgba(255, 255, 255, 0.6));
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+/* Market Data */
+.market-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.market-card {
+  padding: 1.5rem;
+  background: var(--surface-dark, rgba(0, 0, 0, 0.3));
+  border: 1px solid var(--border, rgba(102, 126, 234, 0.2));
+  border-radius: 16px;
+  transition: all 0.3s ease;
+}
+
+.market-card:hover {
+  border-color: #fbbf24;
+  transform: translateY(-3px);
+}
+
+.market-label {
+  color: var(--text-secondary, rgba(255, 255, 255, 0.6));
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+.market-value {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #fbbf24;
+  margin-bottom: 0.5rem;
+}
+
+.market-change {
+  font-size: 0.9rem;
+}
+
+.market-change.positive {
+  color: #10b981;
+}
+
+.market-change.negative {
+  color: #ef4444;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .economics-header h1 {
+    font-size: 2rem;
+  }
+
+  .network-stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+
+  .personal-card.main-card {
+    grid-column: span 1;
+  }
+
+  .calculator {
+    grid-template-columns: 1fr;
+  }
+
+  .market-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Light Mode */
+body.light-mode .economics {
+  background: var(--bg, #f5f5f7);
+}
+
+body.light-mode .economics-section,
+body.light-mode .stat-card,
+body.light-mode .personal-card,
+body.light-mode .calculator-output,
+body.light-mode .market-card {
+  background: var(--surface, rgba(255, 255, 255, 0.9));
+  border-color: var(--border, rgba(0, 0, 0, 0.1));
+}
+
+body.light-mode .reward-pool {
+  background: var(--surface-light, rgba(0, 0, 0, 0.03));
+  border-color: #fbbf24;
+}
